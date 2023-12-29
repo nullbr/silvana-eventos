@@ -34,9 +34,9 @@ export default async function Page() {
         </div>
       </div>
       {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base font-medium leading-6">
+        <div className="flex justify-center text-base font-medium leading-6">
           <Link
-            href="/blog"
+            href="/eventos"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="Todos eventos"
           >
@@ -44,11 +44,11 @@ export default async function Page() {
           </Link>
         </div>
       )}
-      {siteMetadata.newsletter?.provider && (
+      {/* {siteMetadata.newsletter?.provider && (
         <div className="flex items-center justify-center pt-4">
           <NewsletterForm />
         </div>
-      )}
+      )} */}
     </>
   )
 }

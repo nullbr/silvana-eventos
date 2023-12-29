@@ -7,7 +7,7 @@ import Tag from '../Tag'
 const Card = ({ post }: { post: any }) => {
   const { slug, date, title, summary, tags } = post
   const imgSrc = '/static/images/google.png'
-  const href = `/blog/${slug}`
+  const href = `/eventos/${slug}`
 
   return (
     <div className="md max-w-[544px] p-4 md:w-1/2">
