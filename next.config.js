@@ -5,6 +5,15 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  // webpack(config) {
+  //   config.module.rules.push({
+  //     test: /\.svg$/,
+  //     issuer: { and: [/\.(js|ts)x?$/] },
+  //     use: ["@svgr/webpack"],
+  //   });
+  //   return config;
+  // },
+};
 
 export default config;
