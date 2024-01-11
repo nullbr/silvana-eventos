@@ -6,14 +6,16 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  // webpack(config) {
-  //   config.module.rules.push({
-  //     test: /\.svg$/,
-  //     issuer: { and: [/\.(js|ts)x?$/] },
-  //     use: ["@svgr/webpack"],
-  //   });
-  //   return config;
-  // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default config;
