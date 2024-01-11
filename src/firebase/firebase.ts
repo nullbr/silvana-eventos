@@ -6,6 +6,19 @@ export const getImageFromStorage = async (path: string) => {
   const bucket = getStorage().bucket();
   const file = bucket.file(path);
   const imageUrl = await getDownloadURL(file);
-  console.log(imageUrl);
+
+  return imageUrl;
+};
+
+export const uploadImageToStorage = async (path: string, file: Buffer) => {
+  const bucket = getStorage().bucket();
+  const fileRef = bucket.file(path);
+
+  await fileRef.save(file, {
+    contentType: "image/jpeg",
+  });
+
+  const imageUrl = await getDownloadURL(fileRef);
+
   return imageUrl;
 };
