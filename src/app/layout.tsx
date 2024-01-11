@@ -63,7 +63,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${space_grotesk.variable} scroll-smooth`}>
+    <html
+      lang={siteMetadata.language}
+      className={`${space_grotesk.variable} scroll-smooth`}
+      suppressHydrationWarning
+    >
       <link
         rel="apple-touch-icon"
         sizes="76x76"

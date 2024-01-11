@@ -19,7 +19,7 @@ export default {
         primary: colors.pink,
         gray: colors.gray,
       },
-      typography: ({ theme }: { theme: any }) => ({
+      typography: ({ theme }: { theme: (key: string) => void }) => ({
         DEFAULT: {
           css: {
             a: {
@@ -59,4 +59,5 @@ export default {
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+  darkMode: "class",
 } satisfies Config;
