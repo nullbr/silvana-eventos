@@ -1,12 +1,66 @@
+"use client";
+
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { FormEvent } from "react";
+import { api } from "~/trpc/react";
 
 export default function NewEvent() {
   const session = useSession();
-  if (session.status !== "authenticated") return redirect("/admin/login");
+
+  const createEvent = api.event.create.useMutation({
+    onSuccess: () => {
+      console.log("Evento criado com sucesso!");
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
+  const createTag = api.tag.create.useMutation({
+    onSuccess: () => {
+      console.log("Tag criada com sucesso!");
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    // get form data
+    const formData = new FormData(e.currentTarget);
+    const entries = Object.fromEntries(formData.entries()) as {
+      title: string;
+      description: string;
+      date: string;
+      tags: string;
+    };
+
+    const newEvent = await createEvent.mutateAsync({
+      title: entries.title,
+      slug: entries.title.toLowerCase().replace(/\s/g, "-"),
+      date: new Date(entries.date),
+      description: entries.description,
+    });
+
+    if (!newEvent) return;
+
+    entries.tags.split(",").forEach((tag) => {
+      createTag.mutate({
+        eventId: newEvent.id,
+        name: tag.trim(),
+      });
+    });
+  }
+
+  if (session.status === "loading") return null;
+
+  if (session.status !== "authenticated") return redirect("/api/auth/signin");
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="mb-6 grid gap-6 md:grid-cols-2">
         <div>
           <label
@@ -18,6 +72,7 @@ export default function NewEvent() {
           <input
             type="text"
             id="title"
+            name="title"
             required
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="Jantar de Natal"
@@ -32,6 +87,7 @@ export default function NewEvent() {
           </label>
           <input
             id="date"
+            name="date"
             required
             type="date"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -48,6 +104,7 @@ export default function NewEvent() {
           </label>
           <textarea
             id="description"
+            name="description"
             required
             rows={4}
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -64,6 +121,7 @@ export default function NewEvent() {
           <input
             type="text"
             id="tags"
+            name="tags"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="Natal, Jantar, Família..."
             required
