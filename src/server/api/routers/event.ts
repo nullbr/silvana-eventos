@@ -26,13 +26,9 @@ export const eventRouter = createTRPCRouter({
           description: true,
           date: true,
           createdAt: true,
-          _count: { select: { EventImages: true } },
-          EventImages: {
-            select: { id: true, fileName: true, url: true },
-          },
-          EventTags: {
-            select: { id: true, tagId: true },
-          },
+          _count: { select: { eventImages: true } },
+          eventImages: true,
+          eventTags: true,
         },
       });
 
