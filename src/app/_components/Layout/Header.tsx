@@ -5,6 +5,7 @@ import MobileNav from "./MobileNav";
 import ThemeSwitch from "./ThemeSwitch";
 import SearchButton from "./SearchButton";
 import Image from "../Shared/Image";
+import ProtectedLink from "../Admin/ProtectedLink";
 
 const Header = () => {
   return (
@@ -32,11 +33,16 @@ const Header = () => {
             <Link
               key={link.title}
               href={link.href}
-              className="hidden font-medium text-gray-900 sm:block dark:text-gray-100"
+              className="hidden font-medium text-gray-900 dark:text-gray-100 sm:block"
             >
               {link.title}
             </Link>
           ))}
+        <ProtectedLink
+          href="/admin"
+          title="Admin"
+          cls="hidden font-medium text-gray-900 dark:text-gray-100 sm:block"
+        />
         <SearchButton />
         <ThemeSwitch />
         <MobileNav />

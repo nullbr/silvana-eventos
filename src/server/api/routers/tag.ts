@@ -1,8 +1,24 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const tagRouter = createTRPCRouter({
+  allTags: publicProcedure.query(async ({ ctx }) => {
+    const tags = await ctx.db.tag.findMany({
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
+
+    return { tags };
+  }),
   create: protectedProcedure
     .input(
       z.object({

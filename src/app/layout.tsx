@@ -10,6 +10,7 @@ import { ThemeProviders } from "./theme-providers";
 import SectionContainer from "./_components/Layout/SectionContainer";
 import Header from "./_components/Layout/Header";
 import Footer from "./_components/Layout/Footer";
+import { NextAuthProvider } from "./_components/Layout/SessionProvider";
 
 const space_grotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -106,13 +107,15 @@ export default function RootLayout({
       <body className="bg-gray-50 text-black antialiased dark:bg-gray-950 dark:text-white">
         <TRPCReactProvider cookies={cookies().toString()}>
           <ThemeProviders>
-            <SectionContainer>
-              <div className="flex h-screen flex-col justify-between font-sans">
-                <Header />
-                <main className="mb-auto">{children}</main>
-                <Footer />
-              </div>
-            </SectionContainer>
+            <NextAuthProvider>
+              <SectionContainer>
+                <div className="flex h-screen flex-col justify-between font-sans">
+                  <Header />
+                  <main className="mb-auto">{children}</main>
+                  <Footer />
+                </div>
+              </SectionContainer>
+            </NextAuthProvider>
           </ThemeProviders>
         </TRPCReactProvider>
       </body>

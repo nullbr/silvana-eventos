@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "../Shared/Link";
 import headerNavLinks from "~/server/headerNavLinks";
+import ProtectedLink from "../Admin/ProtectedLink";
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false);
@@ -74,6 +75,11 @@ const MobileNav = () => {
               >
                 {link.title}
               </Link>
+              <ProtectedLink
+                href="/admin"
+                title="Admin"
+                cls="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+              />
             </div>
           ))}
         </nav>
