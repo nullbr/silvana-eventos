@@ -16,9 +16,7 @@ export type TableColumns = {
   label: React.JSX.Element;
 }[];
 
-export type TableItem = {
-  [key: string]: string | number | boolean | Date;
-};
+export type TableItem = Record<string, string | number | boolean | Date>;
 
 export type TableData = TableItem[];
 

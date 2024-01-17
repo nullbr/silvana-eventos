@@ -1,11 +1,12 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { FormEvent } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 import { api } from "~/trpc/react";
 
 export default function NewEvent() {
+  const router = useRouter();
   const session = useSession();
 
   const createEvent = api.event.create.useMutation({
@@ -17,14 +18,9 @@ export default function NewEvent() {
     },
   });
 
-  const createTag = api.tag.create.useMutation({
-    onSuccess: () => {
-      console.log("Tag criada com sucesso!");
-    },
-    onError: (err) => {
-      alert(err.message);
-    },
-  });
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const tags = api.tag.allTags.useQuery();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -43,7 +39,11 @@ export default function NewEvent() {
       slug: entries.title.toLowerCase().replace(/\s/g, "-"),
       date: new Date(entries.date),
       description: entries.description,
+      tags: selectedTags,
     });
+
+    // redirect to events page
+    router.push("/admin/eventos");
   }
 
   if (session.status === "loading") return null;
@@ -85,7 +85,7 @@ export default function NewEvent() {
           />
         </div>
       </div>
-      <div className="mb-6 grid gap-6">
+      <div className="mb-6">
         <div>
           <label
             htmlFor="description"
@@ -102,21 +102,40 @@ export default function NewEvent() {
             placeholder="Detalhes do evento..."
           />
         </div>
+      </div>
+      <div className="mb-6 grid gap-6 md:grid-cols-2">
         <div>
-          <label
-            htmlFor="tags"
-            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-          >
+          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
             Tags
           </label>
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            placeholder="Natal, Jantar, Família..."
-            required
-          />
+          <div className="flex flex-wrap gap-2">
+            {(tags.data?.tags || []).map((tag, index) => (
+              <div key={tag.id} className={index > 0 ? "pl-2" : ""}>
+                <input
+                  type="checkbox"
+                  id={tag.name}
+                  name="tags"
+                  value={tag.id}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedTags((prev) => [...prev, e.target.value]);
+                    } else {
+                      setSelectedTags((prev) =>
+                        prev.filter((item) => item !== e.target.value),
+                      );
+                    }
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
+                />
+                <label htmlFor={tag.name} className="sr-only">
+                  {tag.name}
+                </label>
+                <span className="ml-2 text-sm text-gray-900 dark:text-white">
+                  {tag.name}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

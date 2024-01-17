@@ -49,17 +49,31 @@ export const eventRouter = createTRPCRouter({
         slug: z.string(),
         description: z.string(),
         date: z.date(),
+        tags: z.array(z.string()).optional(),
       }),
     )
-    .mutation(async ({ input: { title, slug, description, date }, ctx }) => {
-      await ctx.db.event.create({
-        data: {
-          title,
-          slug,
-          description,
-          date,
-          userId: ctx.session.user.id,
-        },
-      });
-    }),
+    .mutation(
+      async ({ input: { title, slug, description, date, tags }, ctx }) => {
+        const newEvent = await ctx.db.event.create({
+          data: {
+            title,
+            slug,
+            description,
+            date,
+            userId: ctx.session.user.id,
+          },
+        });
+
+        if (tags != null) {
+          await ctx.db.eventTag.createMany({
+            data: tags.map((tag) => ({ eventId: slug, tagId: tag })),
+          });
+        }
+
+        return {
+          ...newEvent,
+          eventTags: tags,
+        };
+      },
+    ),
 });
