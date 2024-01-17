@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { RemoveButton } from "./RemoveButton";
 
 export type TableColumns = {
@@ -11,15 +10,17 @@ export type TableColumns = {
     maxWidth: string;
     textAlign: string;
   };
-  value?: (item: any, _parentItem: any) => React.JSX.Element;
+  value?: (item: TableItem, _parentItem: TableData) => React.JSX.Element;
   key: string;
   object?: boolean;
   label: React.JSX.Element;
 }[];
 
-export type TableData = {
+export type TableItem = {
   [key: string]: string | number | boolean | Date;
-}[];
+};
+
+export type TableData = TableItem[];
 
 export function Table({
   columns,
