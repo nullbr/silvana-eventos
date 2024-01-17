@@ -94,14 +94,11 @@ model Image {
 
 model Tag {
     id        String   @id @default(cuid())
-    eventId   String
     name      String   @unique
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     eventTags EventTag[]
-
-    @@index([eventId])
 }
 
 model EventTag {

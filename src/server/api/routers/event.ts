@@ -52,7 +52,7 @@ export const eventRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input: { title, slug, description, date }, ctx }) => {
-      return await ctx.db.event.create({
+      await ctx.db.event.create({
         data: {
           title,
           slug,

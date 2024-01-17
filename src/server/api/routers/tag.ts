@@ -14,6 +14,7 @@ export const tagRouter = createTRPCRouter({
         id: true,
         name: true,
         createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -23,15 +24,20 @@ export const tagRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        eventId: z.string(),
       }),
     )
-    .mutation(async ({ input: { name, eventId }, ctx }) => {
+    .mutation(async ({ input: { name }, ctx }) => {
       return await ctx.db.tag.create({
         data: {
           name,
-          eventId,
         },
+      });
+    }),
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input: id, ctx }) => {
+      return await ctx.db.tag.delete({
+        where: { id },
       });
     }),
 });

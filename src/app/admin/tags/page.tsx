@@ -1,39 +1,56 @@
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
-import { Table, TableColumns } from "~/app/_components/Table/Table";
+import { TableColumns } from "~/app/_components/Table/Table";
+import { TagsTable } from "~/app/_components/Tags/TagsTable";
 import { api } from "~/trpc/server";
 
-export default async function Tags() {
-  const tags = await api.tag.allTags.query();
+export type TagType = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-  console.log("tags", tags);
+async function handleRemove(id: string) {
+  "use server";
+
+  const result = await api.tag.delete.mutate(id);
+  return !!result;
+}
+
+async function handleCreate(name: string) {
+  "use server";
+
+  return await api.tag.create.mutate({ name });
+}
+
+export default async function Tags() {
+  const data = await api.tag.allTags.query();
 
   const cols: TableColumns = [
     {
       key: "name",
       label: <p>Name</p>,
-      value: (tag) => tag.name,
     },
     {
       key: "createdAt",
       label: <p>Criado</p>,
-      value: (tag) => tag.createdAt,
     },
     {
       key: "updatedAt",
       label: <p>Atualizado</p>,
-      value: (tag) => tag.updatedAt,
-    },
-    {
-      key: "actions",
-      label: <p>Ações</p>,
-      value: (tag) => tag.id,
     },
   ];
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       <PageTitle title="Tags" summary="Lista de tags" />
-      <Table columns={cols} />
+
+      <TagsTable
+        handleCreate={handleCreate}
+        handleRemove={handleRemove}
+        data={data}
+        cols={cols}
+      />
     </div>
   );
 }
