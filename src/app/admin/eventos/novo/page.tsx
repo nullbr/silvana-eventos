@@ -38,20 +38,11 @@ export default function NewEvent() {
       tags: string;
     };
 
-    const newEvent = await createEvent.mutateAsync({
+    await createEvent.mutateAsync({
       title: entries.title,
       slug: entries.title.toLowerCase().replace(/\s/g, "-"),
       date: new Date(entries.date),
       description: entries.description,
-    });
-
-    if (!newEvent) return;
-
-    entries.tags.split(",").forEach((tag) => {
-      createTag.mutate({
-        eventId: newEvent.id,
-        name: tag.trim(),
-      });
     });
   }
 
