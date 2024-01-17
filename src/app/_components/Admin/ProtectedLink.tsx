@@ -13,11 +13,8 @@ export default function ProtectedLink({
   cls?: string;
 }) {
   const session = useSession();
-  console.log(session);
 
-  if (session.status !== "authenticated") {
-    return null;
-  }
+  if (session.status !== "authenticated") return null;
 
   return (
     <CustomLink href={href} className={cls}>

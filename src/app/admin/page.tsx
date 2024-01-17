@@ -3,6 +3,7 @@ import CustomLink from "../_components/Shared/Link";
 
 export default function Admin() {
   const image = "/api/imagens/IMG_1348.jpeg";
+
   return (
     <div>
       <CustomLink href="/admin/eventos">eventos</CustomLink>
