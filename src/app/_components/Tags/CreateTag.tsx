@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Button } from "../Shared/Button";
-import { TagType } from "~/app/admin/tags/page";
+import { TableItem } from "../Table/Table";
 
 export function CreateTag({
   handleCreate,
   setTags,
 }: {
-  handleCreate: (name: string) => Promise<TagType>;
-  setTags: React.Dispatch<React.SetStateAction<TagType[]>>;
+  handleCreate: (name: string) => Promise<TableItem>;
+  setTags: React.Dispatch<React.SetStateAction<TableItem[]>>;
 }) {
   const [name, setName] = useState("");
 

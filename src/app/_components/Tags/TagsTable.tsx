@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Table } from "../Table/Table";
+import { Table, TableColumns, TableData, TableItem } from "../Table/Table";
 import { CreateTag } from "./CreateTag";
-import { TagType } from "~/app/admin/tags/page";
 
 export function TagsTable({
   handleCreate,
@@ -11,14 +10,12 @@ export function TagsTable({
   data,
   cols,
 }: {
-  handleCreate: (name: string) => Promise<TagType>;
+  handleCreate: (name: string) => Promise<TableItem>;
   handleRemove: (id: string) => Promise<boolean>;
-  data: any;
-  cols: any;
+  data: { tags: TableData };
+  cols: TableColumns;
 }) {
   const [tags, setTags] = useState(data.tags);
-
-  console.log(tags);
 
   return (
     <>

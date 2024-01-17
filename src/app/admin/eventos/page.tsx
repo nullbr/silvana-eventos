@@ -1,3 +1,5 @@
+"use client";
+
 import CustomLink from "~/app/_components/Shared/Link";
 
 export default function Events() {

@@ -1,14 +1,7 @@
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
-import { TableColumns } from "~/app/_components/Table/Table";
+import { TableColumns, TableItem } from "~/app/_components/Table/Table";
 import { TagsTable } from "~/app/_components/Tags/TagsTable";
 import { api } from "~/trpc/server";
-
-export type TagType = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
 
 async function handleRemove(id: string) {
   "use server";
@@ -20,7 +13,7 @@ async function handleRemove(id: string) {
 async function handleCreate(name: string) {
   "use server";
 
-  return await api.tag.create.mutate({ name });
+  return (await api.tag.create.mutate({ name })) as TableItem;
 }
 
 export default async function Tags() {
