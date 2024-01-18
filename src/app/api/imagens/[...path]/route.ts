@@ -7,8 +7,6 @@ export async function GET(request: NextRequest) {
 
   const path = request.nextUrl.pathname.replace("/api/imagens/", "");
 
-  console.log("PATH", path);
-
   if (!path || typeof path !== "string")
     return new Response(null, { status: 404 });
 

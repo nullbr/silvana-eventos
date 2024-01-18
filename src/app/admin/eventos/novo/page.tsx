@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 
 export default function NewEvent() {
@@ -22,7 +22,7 @@ export default function NewEvent() {
 
   const tags = api.tag.allTags.useQuery();
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     // get form data

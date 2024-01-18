@@ -11,7 +11,7 @@ export function InfiniteEvents() {
     { getNextPageParam: (lastPage) => lastPage.nextCursor },
   );
 
-  const events = eventsQuery.data?.pages.flatMap((page) => page.events);
+  const events = eventsQuery.data?.pages.flatMap((page) => page.events) ?? [];
 
   if (eventsQuery.isLoading) return <LoadingIndicator />;
   if (eventsQuery.error) return <div>{eventsQuery.error.message}</div>;
@@ -22,18 +22,16 @@ export function InfiniteEvents() {
       </p>
     );
 
-  console.log(events);
-
   return (
     <div className="container py-12">
       <InfiniteScroll
         className="-m-4 flex flex-wrap"
         dataLength={eventsQuery.data.pages.length}
         next={eventsQuery.fetchNextPage}
-        hasMore={eventsQuery.hasNextPage as boolean}
+        hasMore={eventsQuery.hasNextPage ?? false}
         loader={<LoadingIndicator />}
       >
-        {(events ?? []).map((event) => (
+        {events.map((event) => (
           <Card
             key={event.id}
             event={{
@@ -41,7 +39,7 @@ export function InfiniteEvents() {
               title: event.title,
               description: event.description,
               date: new Date(event.date),
-              tags: event.eventTags.map((tag) => tag.tagId) as string[],
+              tags: event.eventTags.map((tag) => tag.tagId),
               images: event.eventImages.map((image) => image.url),
             }}
           />
