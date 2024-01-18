@@ -29,6 +29,7 @@ export default function RecentEvents() {
                 ...event,
                 date: new Date(event.date),
                 tags: event.eventTags.map((tag) => tag.tagId),
+                images: event.eventImages.map((image) => image.url),
               }}
             />
           ))}
