@@ -27,6 +27,12 @@ export const tagRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input: { name }, ctx }) => {
+      const existingTag = await ctx.db.tag.findFirst({
+        where: { name },
+      });
+
+      if (existingTag != null) return;
+
       return await ctx.db.tag.create({
         data: {
           name,

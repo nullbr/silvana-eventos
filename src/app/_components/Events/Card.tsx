@@ -8,6 +8,7 @@ type Event = {
   description: string;
   date: Date;
   tags: string[];
+  images: string[];
 };
 
 const Card = ({ event }: { event: Event }) => {
@@ -37,7 +38,9 @@ const Card = ({ event }: { event: Event }) => {
           <dl>
             <dt className="sr-only">Published on</dt>
             <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-              <time dateTime={date.toISOString()}>{date.toISOString()}</time>
+              <time dateTime={date.toISOString()}>
+                {date.toLocaleDateString()}
+              </time>
             </dd>
           </dl>
           <h2 className="my-3 text-2xl font-bold leading-8 tracking-tight">

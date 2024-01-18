@@ -109,7 +109,7 @@ export default function NewEvent() {
             Tags
           </label>
           <div className="flex flex-wrap gap-2">
-            {(tags.data?.tags || []).map((tag, index) => (
+            {(tags.data?.tags ?? []).map((tag, index) => (
               <div key={tag.id} className={index > 0 ? "pl-2" : ""}>
                 <input
                   type="checkbox"
