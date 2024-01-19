@@ -7,6 +7,23 @@ import {
 } from "~/server/api/trpc";
 
 export const eventRouter = createTRPCRouter({
+  paginatedEvents: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+        page: z.number().optional(),
+      }),
+    )
+    .query(async ({ input: { limit = 10, page = 1 }, ctx }) => {
+      const events = await ctx.db.event.findMany({
+        take: limit,
+        skip: (page - 1) * limit,
+      });
+      const eventsCount = await ctx.db.event.count();
+      const pages = Math.ceil(eventsCount / limit);
+
+      return { events, pages, size: eventsCount };
+    }),
   infiniteEvents: publicProcedure
     .input(
       z.object({

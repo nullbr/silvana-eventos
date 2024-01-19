@@ -4,7 +4,7 @@ import { api } from "~/trpc/react";
 import Card from "./Card";
 import CustomLink from "../Shared/Link";
 
-const MAX_DISPLAY = 5;
+const MAX_DISPLAY = 6;
 
 export default function RecentEvents() {
   const events =

@@ -13,15 +13,17 @@ export default function Events() {
       perPage: 10,
       current: 1,
       pages: 0,
+      size: 0,
     },
     showSizeChanger: true,
   });
 
-  const eventsQuery = api.event.infiniteEvents.useInfiniteQuery(
-    { limit: query.pagination.perPage },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor },
-  );
-  const events = eventsQuery.data?.pages.flatMap((page) => page.events) ?? [];
+  const eventsQuery = api.event.paginatedEvents.useQuery({
+    limit: query.pagination.perPage,
+    page: query.pagination.current,
+  });
+
+  const events = eventsQuery.data?.events ?? [];
 
   useEffect(() => {
     if (!eventsQuery.data) return;
@@ -30,7 +32,8 @@ export default function Events() {
       ...prev,
       pagination: {
         ...prev.pagination,
-        pages: eventsQuery.data.pages.length,
+        pages: eventsQuery.data.pages,
+        size: eventsQuery.data.size,
       },
     }));
   }, [eventsQuery.data]);

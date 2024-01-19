@@ -65,6 +65,8 @@ export function Table({
     }
   }
 
+  console.log(data);
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -88,7 +90,7 @@ export function Table({
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {loading && data.length === 0 ? (
               <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
                 <td
                   colSpan={columns.length + 1}

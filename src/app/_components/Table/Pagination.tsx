@@ -7,6 +7,7 @@ export type PaginationType = {
     current: number;
     perPage: 10 | 20 | 30 | 40 | 50;
     pages: number;
+    size: number;
   };
   showSizeChanger: boolean;
 };
@@ -19,6 +20,8 @@ export function Pagination({
   onChange?: (pagination: PaginationType) => void;
 }) {
   if (!pagination) return null;
+
+  console.log(pagination);
 
   return (
     <nav
