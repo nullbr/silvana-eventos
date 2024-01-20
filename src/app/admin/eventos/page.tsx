@@ -10,7 +10,7 @@ import { api } from "~/trpc/react";
 
 export default function Events() {
   const router = useRouter();
-  const { mutateAsync: removeEvent } = api.event.delete.useMutation();
+  const { mutateAsync: removeEvent } = api.event.remove.useMutation();
   const [query, setQuery] = useState<PaginationType>({
     pagination: {
       perPage: 10,

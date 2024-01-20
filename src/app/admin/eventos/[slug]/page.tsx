@@ -3,6 +3,7 @@ import { CreateOrEditEvent } from "~/app/_components/Events/CreateOrEditEvent";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import NotFound from "~/app/not-found";
 import { api } from "~/trpc/server";
+import { TagType } from "~/types/Tag";
 
 export default async function EventPage(
   context: GetStaticPropsContext<{ slug: string }>,

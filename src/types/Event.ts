@@ -1,5 +1,6 @@
 import { EventTagType } from "./EventTag";
 import { ImageType } from "./Image";
+import { TagType } from "./Tag";
 
 export type EventType = {
   title: string;
@@ -10,4 +11,8 @@ export type EventType = {
   updatedAt: Date;
   eventImages: ImageType[];
   eventTags: EventTagType[];
+};
+
+export type EventWithTagsType = EventType & {
+  tags: TagType[];
 };

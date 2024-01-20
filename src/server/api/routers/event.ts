@@ -97,13 +97,20 @@ export const eventRouter = createTRPCRouter({
   find: publicProcedure.input(z.string()).query(({ input: slug, ctx }) =>
     ctx.db.event.findUnique({
       where: { slug },
-      include: {
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        description: true,
+        date: true,
+        createdAt: true,
+        updatedAt: true,
         eventImages: true,
         eventTags: true,
       },
     }),
   ),
-  delete: protectedProcedure
+  remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ input: id, ctx }) => {
       const result = await ctx.db.event.delete({ where: { id } });

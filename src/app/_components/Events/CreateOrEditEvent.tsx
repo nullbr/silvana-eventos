@@ -51,6 +51,10 @@ export function CreateOrEditEvent({ event }: { event?: EventType }) {
 
   if (session.status !== "authenticated") return redirect("/api/auth/signin");
 
+  console.log(event?.eventTags.map((tag) => tag.tagId));
+
+  // console.log(tags.data?.tags[0].id);
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-6 grid gap-6 md:grid-cols-2">
@@ -65,6 +69,7 @@ export function CreateOrEditEvent({ event }: { event?: EventType }) {
             type="text"
             id="title"
             name="title"
+            defaultValue={event?.title ?? ""}
             required
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="Jantar de Natal"
@@ -80,6 +85,7 @@ export function CreateOrEditEvent({ event }: { event?: EventType }) {
           <input
             id="date"
             name="date"
+            defaultValue={event?.date.toDateString() ?? ""}
             required
             type="date"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -97,6 +103,7 @@ export function CreateOrEditEvent({ event }: { event?: EventType }) {
           <textarea
             id="description"
             name="description"
+            defaultValue={event?.description ?? ""}
             required
             rows={4}
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -120,6 +127,9 @@ export function CreateOrEditEvent({ event }: { event?: EventType }) {
                   id={tag.name}
                   name={tag.name}
                   value={tag.id}
+                  checked={event?.eventTags
+                    .map((tag) => tag.tagId)
+                    .includes(tag.id)}
                   onChange={(e) => {
                     if (e.target.checked) {
                       setSelectedTags((prev) => [...prev, e.target.value]);
