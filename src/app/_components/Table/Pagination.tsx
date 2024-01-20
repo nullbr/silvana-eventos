@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 export type PaginationType = {
   pagination: {
     current: number;
@@ -20,8 +18,6 @@ export function Pagination({
   onChange?: (pagination: PaginationType) => void;
 }) {
   if (!pagination) return null;
-
-  console.log(pagination);
 
   return (
     <nav
@@ -124,7 +120,6 @@ function SizeChanger({
 
   return (
     <select
-      id="small"
       className="block rounded-lg border border-gray-300 bg-white py-1 pl-2 pr-8 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:placeholder-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
       value={pagination.pagination.perPage}
       onChange={(e) => {

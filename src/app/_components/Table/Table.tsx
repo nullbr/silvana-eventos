@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingIndicator from "../Shared/LoadingIndicator";
+import { EditButton } from "./EditButton";
 import { Pagination, PaginationType } from "./Pagination";
 import { RemoveButton } from "./RemoveButton";
 
@@ -26,6 +27,7 @@ export function Table({
   columns,
   data,
   handleRemove,
+  handleEdit,
   setData,
   loading = false,
   pagination = false,
@@ -33,7 +35,8 @@ export function Table({
 }: {
   columns: TableColumns;
   data: TableData;
-  handleRemove?: (id: string) => Promise<boolean>;
+  handleRemove?: (id: string) => Promise<boolean | void> | void;
+  handleEdit?: (id: string) => void;
   setData?: React.Dispatch<React.SetStateAction<TableData>>;
   loading?: boolean;
   pagination?: false | PaginationType;
@@ -65,8 +68,6 @@ export function Table({
     }
   }
 
-  console.log(data);
-
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -82,7 +83,7 @@ export function Table({
                   {col.label}
                 </th>
               ))}
-              {handleRemove && (
+              {(handleRemove || handleEdit) && (
                 <th scope="col" className="px-6 py-3">
                   Ações
                 </th>
@@ -114,12 +115,20 @@ export function Table({
                           </td>
                         );
                       })}
-                      {handleRemove && !!item.id && (
-                        <td className="px-6 py-4">
-                          <RemoveButton
-                            id={item.id.toString()}
-                            handleRemove={removeItem}
-                          />
+                      {(handleEdit || handleRemove) && !!item.id && (
+                        <td className="flex gap-4 px-6 py-4">
+                          {handleEdit && (
+                            <EditButton
+                              id={item.id.toString()}
+                              handleEdit={handleEdit}
+                            />
+                          )}
+                          {handleRemove && (
+                            <RemoveButton
+                              id={item.id.toString()}
+                              handleRemove={removeItem}
+                            />
+                          )}
                         </td>
                       )}
                     </tr>

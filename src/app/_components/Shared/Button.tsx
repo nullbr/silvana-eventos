@@ -12,12 +12,14 @@ export function Button({
   name,
   href,
   style,
+  className,
 }: {
   onAction?: () => void;
   outline?: boolean;
   type?: "button" | "submit" | "reset";
   name: string;
   href?: string;
+  className?: string;
   style?:
     | "alternative"
     | "dark"
@@ -98,7 +100,7 @@ export function Button({
       <CustomLink
         href={href}
         onClick={onAction}
-        className={`${classes} ${defaultClasses}`}
+        className={`${classes} ${defaultClasses} ${className}`}
       >
         {name}
       </CustomLink>
