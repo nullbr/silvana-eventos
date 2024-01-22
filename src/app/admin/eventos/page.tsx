@@ -78,7 +78,7 @@ export default function Events() {
 
     if (!result) return alert("Erro ao remover evento");
 
-    eventsQuery.refetch();
+    await eventsQuery.refetch();
   }
 
   return (

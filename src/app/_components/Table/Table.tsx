@@ -83,7 +83,7 @@ export function Table({
                   {col.label}
                 </th>
               ))}
-              {(handleRemove || handleEdit) && (
+              {(handleRemove ?? handleEdit) && (
                 <th scope="col" className="px-6 py-3">
                   Ações
                 </th>
@@ -115,7 +115,7 @@ export function Table({
                           </td>
                         );
                       })}
-                      {(handleEdit || handleRemove) && !!item.id && (
+                      {(handleEdit ?? handleRemove) && !!item.id && (
                         <td className="flex gap-4 px-6 py-4">
                           {handleEdit && (
                             <EditButton

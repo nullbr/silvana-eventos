@@ -1,7 +1,9 @@
 "use client";
 
 import CustomLink from "./Link";
+import { LoaderIcon } from "./LoadingIcon";
 
+const loadingClasses = "cursor-not-allowed";
 const defaultClasses =
   "rounded-lg px-5 py-2.5 text-center text-sm font-medium focus:outline-none focus:ring-4";
 
@@ -13,6 +15,7 @@ export function Button({
   href,
   style,
   className,
+  loading = false,
 }: {
   onAction?: () => void;
   outline?: boolean;
@@ -20,6 +23,7 @@ export function Button({
   name: string;
   href?: string;
   className?: string;
+  loading?: boolean;
   style?:
     | "alternative"
     | "dark"
@@ -111,8 +115,12 @@ export function Button({
     <button
       type={type}
       onClick={onAction}
-      className={`${classes} ${defaultClasses}`}
+      disabled={loading}
+      className={`${classes} ${defaultClasses} ${className} ${
+        loading ? loadingClasses : ""
+      }}`}
     >
+      {loading && <LoaderIcon />}
       {name}
     </button>
   );

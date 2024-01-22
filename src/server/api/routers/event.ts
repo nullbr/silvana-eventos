@@ -116,4 +116,40 @@ export const eventRouter = createTRPCRouter({
       const result = await ctx.db.event.delete({ where: { id } });
       return result;
     }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        slug: z.string(),
+        description: z.string().optional(),
+        date: z.date().optional(),
+        tags: z.array(z.string()),
+      }),
+    )
+    .mutation(
+      async ({ input: { id, title, slug, description, date, tags }, ctx }) => {
+        const result = await ctx.db.event.update({
+          where: { id },
+          data: {
+            title,
+            slug,
+            description,
+            date,
+          },
+        });
+
+        if (tags != null) {
+          await ctx.db.eventTag.deleteMany({ where: { eventId: id } });
+          await ctx.db.eventTag.createMany({
+            data: tags.map((tag) => ({ eventId: id, tagId: tag })),
+          });
+        }
+
+        return {
+          ...result,
+          eventTags: tags,
+        };
+      },
+    ),
 });
