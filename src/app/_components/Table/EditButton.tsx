@@ -12,7 +12,7 @@ export function EditButton({
       onClick={() => handleEdit(id)}
       className="font-medium text-blue-600 hover:underline dark:text-blue-500"
     >
-      Edit
+      Editar
     </button>
   );
 }

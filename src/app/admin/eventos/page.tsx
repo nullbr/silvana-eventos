@@ -8,6 +8,25 @@ import { PaginationType } from "~/app/_components/Table/Pagination";
 import { Table } from "~/app/_components/Table/Table";
 import { api } from "~/trpc/react";
 
+const cols = [
+  {
+    key: "title",
+    label: <p>Título</p>,
+  },
+  {
+    key: "description",
+    label: <p>Descrição</p>,
+  },
+  {
+    key: "date",
+    label: <p>Data</p>,
+  },
+  {
+    key: "updatedAt",
+    label: <p>Atualizado</p>,
+  },
+];
+
 export default function Events() {
   const router = useRouter();
   const { mutateAsync: removeEvent } = api.event.remove.useMutation();
@@ -41,25 +60,6 @@ export default function Events() {
     }));
   }, [eventsQuery.data]);
 
-  const cols = [
-    {
-      key: "title",
-      label: <p>Título</p>,
-    },
-    {
-      key: "date",
-      label: <p>Data</p>,
-    },
-    {
-      key: "createdAt",
-      label: <p>Criado</p>,
-    },
-    {
-      key: "updatedAt",
-      label: <p>Atualizado</p>,
-    },
-  ];
-
   function handleTableChange(pagination: PaginationType) {
     setQuery(pagination);
   }
@@ -75,7 +75,6 @@ export default function Events() {
     if (eventsQuery.isLoading) return;
 
     const result = await removeEvent(id);
-
     if (!result) return alert("Erro ao remover evento");
 
     await eventsQuery.refetch();
@@ -101,6 +100,7 @@ export default function Events() {
             id: event.id,
             title: event.title,
             date: event.date,
+            description: event.description,
             createdAt: event.createdAt,
             updatedAt: event.updatedAt,
           }))}

@@ -12,7 +12,7 @@ export function RemoveButton({
       onClick={() => handleRemove(id)}
       className="font-medium text-red-600 hover:underline dark:text-red-500"
     >
-      Remove
+      Remover
     </button>
   );
 }

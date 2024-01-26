@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/trpc/react";
 import { EventType } from "~/types/Event";
 import { Button } from "../Shared/Button";
@@ -21,14 +21,13 @@ export function Form({
 }) {
   const session = useSession();
   const tags = api.tag.allTags.useQuery();
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const eventTags = event?.eventTags.map((tag) => tag.tagId) ?? [];
+  const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
 
   function toggleTag(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
-      setSelectedTags((prev) => [...prev, e.target.value]);
-    } else {
-      setSelectedTags((prev) => prev.filter((item) => item !== e.target.value));
-    }
+    if (e.target.checked) return setSelectedTags((prev) => [...prev, e.target.value]);
+
+    return setSelectedTags((prev) => prev.filter((item) => item !== e.target.value));
   }
 
   if (session.status === "loading") return null;
@@ -64,7 +63,7 @@ export function Form({
           <input
             id="date"
             name="date"
-            defaultValue={event?.date.toDateString() ?? ""}
+            defaultValue={event?.date.toISOString().split("T")[0] ?? ""}
             required
             type="date"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -106,9 +105,7 @@ export function Form({
                   id={tag.name}
                   name={tag.name}
                   value={tag.id}
-                  checked={event?.eventTags
-                    .map((tag) => tag.tagId)
-                    .includes(tag.id)}
+                  checked={selectedTags.includes(tag.id)}
                   onChange={toggleTag}
                   className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
                 />

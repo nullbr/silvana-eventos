@@ -108,13 +108,14 @@ export function Table({
                       key={index}
                       className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                     >
-                      {columns.map((currentCol, idx) => {
-                        return (
-                          <td className="px-6 py-4" key={`${index}-${idx}`}>
-                            {renderValue(item, currentCol)}
-                          </td>
-                        );
-                      })}
+                      {columns.map((currentCol, idx) => (
+                        <td
+                          className="px-6 py-4"
+                          key={`${index}-${idx}`}
+                        >
+                          <p className="sm:max-w-36 truncate">{renderValue(item, currentCol)}</p>
+                        </td>
+                      ))}
                       {(handleEdit ?? handleRemove) && !!item.id && (
                         <td className="flex gap-4 px-6 py-4">
                           {handleEdit && (
