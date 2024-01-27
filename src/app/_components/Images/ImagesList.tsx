@@ -4,7 +4,7 @@ export function ImagesList({ images }: { images: ImageType[] }) {
   return (
     <div>
       {images.map((image) => (
-        <div className="w-full p-2 md:w-1/2 lg:w-1/3 xl:w-1/4">
+        <div key={image.id} className="w-full p-2 md:w-1/2 lg:w-1/3 xl:w-1/4">
           <div className="overflow-hidden rounded-lg bg-white shadow-lg">
             <img
               className="h-48 w-full object-cover object-center"

@@ -31,7 +31,7 @@ export default function Images({ params }: { params: { id: string } }) {
         {!images && isLoading ? (
           <LoadingIndicator />
         ) : (
-          <ImagesList images={images?.images || []} />
+          <ImagesList images={images?.images ?? []} />
         )}
       </div>
     </div>
