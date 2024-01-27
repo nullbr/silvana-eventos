@@ -94,22 +94,26 @@ export const eventRouter = createTRPCRouter({
         };
       },
     ),
-  find: publicProcedure.input(z.string()).query(({ input: slug, ctx }) =>
-    ctx.db.event.findUnique({
-      where: { slug },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        description: true,
-        date: true,
-        createdAt: true,
-        updatedAt: true,
-        eventImages: true,
-        eventTags: true,
-      },
+  find: publicProcedure
+    .input(z.object({ id: z.string().optional(), slug: z.string().optional() }))
+    .query(({ input: { slug, id }, ctx }) => {
+      if (!slug && !id) throw new Error("Must provide id or slug");
+
+      return ctx.db.event.findUnique({
+        where: { id, slug },
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          date: true,
+          createdAt: true,
+          updatedAt: true,
+          eventImages: true,
+          eventTags: true,
+        },
+      });
     }),
-  ),
   remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ input: id, ctx }) => {

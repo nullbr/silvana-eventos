@@ -65,10 +65,7 @@ export default function Events() {
   }
 
   function handleEdit(id: string) {
-    const slug = events.find((event) => event.id === id)?.slug;
-
-    if (!slug) return;
-    router.push(`/admin/eventos/${slug}`);
+    router.push(`/admin/eventos/${id}`);
   }
 
   async function handleRemove(id: string): Promise<void> {

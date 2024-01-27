@@ -1,8 +1,8 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 import { EventType } from "~/types/Event";
 import { Button } from "../Shared/Button";
@@ -20,14 +20,34 @@ export function Form({
   event?: EventType;
 }) {
   const session = useSession();
+  const router = useRouter();
   const tags = api.tag.allTags.useQuery();
   const eventTags = event?.eventTags.map((tag) => tag.tagId) ?? [];
   const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
+  const { mutateAsync: removeEvent, isLoading: isRemoving } =
+    api.event.remove.useMutation({
+      onSuccess: () => {
+        console.log("Evento removido com sucesso!");
+        router.push("/admin/eventos");
+      },
+      onError: (err) => {
+        alert(err.message);
+      },
+    });
 
   function toggleTag(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) return setSelectedTags((prev) => [...prev, e.target.value]);
+    if (e.target.checked)
+      return setSelectedTags((prev) => [...prev, e.target.value]);
 
-    return setSelectedTags((prev) => prev.filter((item) => item !== e.target.value));
+    return setSelectedTags((prev) =>
+      prev.filter((item) => item !== e.target.value),
+    );
+  }
+
+  function handleRemove() {
+    if (isLoading || isRemoving || !event) return;
+
+    removeEvent(event.id);
   }
 
   if (session.status === "loading") return null;
@@ -123,7 +143,9 @@ export function Form({
 
       <div className="flex gap-2">
         <Button name="Salvar" style="green" loading={isLoading} type="submit" />
-        <Button name="Cancelar" href="/admin/eventos" style="red" />
+        <Button name="Remover" style="red" onAction={handleRemove} />
+        <Button name="Imagens" href={`/admin/eventos/${event?.id}/imagens`} />
+        <Button name="Voltar" href="/admin/eventos" style="light" />
       </div>
     </form>
   );

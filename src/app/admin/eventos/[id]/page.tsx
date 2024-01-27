@@ -9,10 +9,10 @@ import { api } from "~/trpc/react";
 
 export default function EventPage() {
   const router = useRouter();
-  const { slug } = useParams<{ slug: string }>();
-  if (!slug) return <NotFound />;
-  const { data: event, isLoading } = api.event.find.useQuery(slug);
+  const { id } = useParams<{ id: string }>();
+  if (!id) return <NotFound />;
 
+  const { data: event, isLoading } = api.event.find.useQuery({ id });
   const updateEvent = api.event.update.useMutation({
     onSuccess: () => {
       console.log("Evento atualizado com sucesso!");
