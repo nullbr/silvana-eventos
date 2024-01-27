@@ -1,24 +1,38 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import LoadingIndicator from "~/app/_components/Shared/LoadingIndicator";
+import { Form } from "~/app/_components/Images/Form";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import NotFound from "~/app/not-found";
 import { api } from "~/trpc/react";
+import { ImagesList } from "~/app/_components/Images/ImagesList";
+import LoadingIndicator from "~/app/_components/Shared/LoadingIndicator";
 
-export default function Images() {
-  const { id } = useParams<{ id: string }>();
-  const { data, isLoading } = api.image.all.useQuery({ eventId: id });
-  const { data: event } = api.event.find.useQuery({ id });
+export default function Images({ params }: { params: { id: string } }) {
+  if (!params?.id) return <NotFound />;
 
-  if (!id && !isLoading) return <NotFound />;
+  const {
+    data: images,
+    refetch,
+    isLoading,
+  } = api.image.all.useQuery({
+    eventId: params.id,
+  });
+  const { data: event } = api.event.find.useQuery({ id: params.id });
+
+  console.log("images", images);
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       <PageTitle title={`Adicionar imagens a ${event?.title}`} />
 
       <div className="pt-4">
-        {!event || isLoading ? <LoadingIndicator /> : <p>imagens</p>}
+        <Form eventId={params.id} refetchImages={refetch} />
+
+        {!images && isLoading ? (
+          <LoadingIndicator />
+        ) : (
+          <ImagesList images={images?.images || []} />
+        )}
       </div>
     </div>
   );

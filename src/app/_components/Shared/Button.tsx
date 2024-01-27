@@ -5,7 +5,7 @@ import { LoaderIcon } from "./LoadingIcon";
 
 const loadingClasses = "cursor-not-allowed";
 const defaultClasses =
-  "rounded-lg px-5 py-2.5 text-center text-sm font-medium focus:outline-none focus:ring-4";
+  "rounded-lg px-5 py-2.5 text-center text-sm font-medium focus:outline-none focus:ring-4 flex flex-row items-center justify-center";
 
 export function Button({
   onAction,
@@ -17,7 +17,7 @@ export function Button({
   className,
   loading = false,
 }: {
-  onAction?: () => void;
+  onAction?: () => void | Promise<void>;
   outline?: boolean;
   type?: "button" | "submit" | "reset";
   name: string;

@@ -19,17 +19,29 @@ export const imageRouter = createTRPCRouter({
       const images = await ctx.db.image.findMany({
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         where: { eventId },
-        select: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          fileName: true,
-          url: true,
-          default: true,
-          event: { select: { id: true, title: true } },
-        },
       });
 
       return { images };
+    }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        images: z.array(
+          z.object({
+            fileName: z.string(),
+            url: z.string(),
+            default: z.boolean(),
+            extension: z.string(),
+            eventId: z.string(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ input: { images }, ctx }) => {
+      const newImages = await ctx.db.image.createMany({
+        data: images,
+      });
+
+      return newImages;
     }),
 });

@@ -84,6 +84,7 @@ model Image {
     fileName  String
     url       String
     default   Boolean
+    extension String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

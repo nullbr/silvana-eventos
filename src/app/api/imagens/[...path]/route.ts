@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { getImageFromStorage } from "~/firebase/firebase";
-import { initAdmin } from "~/firebase/firebaseAdmin";
+import { getImageFromStorage } from "~/firebase/server/firebase";
+import { initAdmin } from "~/firebase/server/firebaseAdmin";
 
 export async function GET(request: NextRequest) {
   await initAdmin();
