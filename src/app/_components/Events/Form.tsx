@@ -24,7 +24,7 @@ export function Form({
   const tags = api.tag.allTags.useQuery();
   const eventTags = event?.eventTags.map((tag) => tag.tagId) ?? [];
   const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
-  const { mutateAsync: removeEvent, isLoading: isRemoving } =
+  const { mutate: removeEvent, isLoading: isRemoving } =
     api.event.remove.useMutation({
       onSuccess: () => {
         console.log("Evento removido com sucesso!");
@@ -45,7 +45,7 @@ export function Form({
   }
 
   function handleRemove() {
-    if (isLoading || isRemoving || !event) return;
+    if (isLoading ?? isRemoving ?? !event) return;
 
     removeEvent(event.id);
   }
