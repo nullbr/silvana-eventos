@@ -46,7 +46,7 @@ export async function uploadImageToStorage({
 
 function formatFileName(originalFileName: string) {
   const formattedFileName = originalFileName.replace(/[^a-zA-Z0-9.-]/g, "_");
-  const finalFileName = formattedFileName.replace(/_+/g, "_");
+  const finalFileName = formattedFileName.replace(/_+/g, "_").slice(0, 50);
 
   return finalFileName;
 }

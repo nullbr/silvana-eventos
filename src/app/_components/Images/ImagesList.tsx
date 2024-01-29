@@ -1,5 +1,4 @@
 import type { Image as ImageType } from "@prisma/client";
-import Image from "../Shared/Image";
 
 export function ImagesList({ images }: { images: ImageType[] }) {
   return (
