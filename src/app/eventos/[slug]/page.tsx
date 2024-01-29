@@ -1,5 +1,4 @@
 import { Header } from "~/app/_components/Events/Header";
-import Image from "~/app/_components/Shared/Image";
 import { api } from "~/trpc/server";
 
 export default async function Event({ params }: { params: { slug: string } }) {
@@ -24,7 +23,7 @@ export default async function Event({ params }: { params: { slug: string } }) {
               key={image.id}
               className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 shadow-lg dark:border-gray-600"
             >
-              <Image
+              <img
                 className="h-full w-full object-contain"
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
                 src={`/api/imagens/${image.fileName}`}
