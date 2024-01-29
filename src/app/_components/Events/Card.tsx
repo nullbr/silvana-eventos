@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import type {
   Event,
   EventTag,
   Image as ImageType,
@@ -29,7 +29,7 @@ export function Card({
   const [tags, setTags] = useState<TagType[]>([]);
   const { data: tagsQuery } = api.tag.allTags.useQuery();
 
-  http: useEffect(() => {
+  useEffect(() => {
     if (!tagsQuery) return;
 
     const eventTagIds = eventTags.map((tag) => tag.tagId);
@@ -38,7 +38,7 @@ export function Card({
     ) as TagType[];
 
     setTags(tagObjects);
-  }, [tagsQuery]);
+  }, [tagsQuery, eventTags]);
 
   return (
     <div className="md max-w-[544px] p-4 md:w-1/2">

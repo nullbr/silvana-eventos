@@ -15,12 +15,6 @@ export function InfiniteEvents() {
 
   if (eventsQuery.isLoading) return <LoadingIndicator />;
   if (eventsQuery.error) return <div>{eventsQuery.error.message}</div>;
-  if (!eventsQuery.data)
-    return (
-      <p className="text-center text-gray-500 dark:text-gray-400">
-        Nenhum evento encontrado
-      </p>
-    );
 
   return (
     <div className="container py-12">

@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Space_Grotesk } from "next/font/google";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { siteMetadata } from "~/server/siteMetadata";
 import { ThemeProviders } from "./theme-providers";
 import SectionContainer from "./_components/Layout/SectionContainer";

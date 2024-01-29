@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Table, TableColumns, TableData, TableItem } from "../Table/Table";
+import type { TableColumns, TableData, TableItem } from "../Table/Table";
+import { Table } from "../Table/Table";
 import { CreateTag } from "./CreateTag";
 
 export function TagsTable({

@@ -1,4 +1,5 @@
 import type { Image as ImageType } from "@prisma/client";
+import Image from "../Shared/Image";
 
 export function ImagesList({ images }: { images: ImageType[] }) {
   return (
@@ -8,7 +9,7 @@ export function ImagesList({ images }: { images: ImageType[] }) {
           key={image.id}
           className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 shadow-lg dark:border-gray-600 dark:bg-gray-700"
         >
-          <img
+          <Image
             className="h-full w-full object-contain"
             style={{ maxWidth: "100%", maxHeight: "100%" }}
             src={`/api/imagens/${image.fileName}`}

@@ -2,7 +2,8 @@
 
 import LoadingIndicator from "../Shared/LoadingIndicator";
 import { EditButton } from "./EditButton";
-import { Pagination, PaginationType } from "./Pagination";
+import { Pagination } from "./Pagination";
+import type { PaginationType } from "./Pagination";
 import { RemoveButton } from "./RemoveButton";
 
 export type TableColumns = {

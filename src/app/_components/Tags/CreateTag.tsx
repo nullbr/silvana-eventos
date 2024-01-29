@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "../Shared/Button";
-import { TableItem } from "../Table/Table";
+import type { TableItem } from "../Table/Table";
 
 export function CreateTag({
   handleCreate,

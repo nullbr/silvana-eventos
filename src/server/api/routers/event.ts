@@ -1,4 +1,3 @@
-import { Event } from "@prisma/client";
 import { z } from "zod";
 
 import {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Form, FormEntries } from "~/app/_components/Events/Form";
+import { Form } from "~/app/_components/Events/Form";
+import type { FormEntries } from "~/app/_components/Events/Form";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import { api } from "~/trpc/react";
 

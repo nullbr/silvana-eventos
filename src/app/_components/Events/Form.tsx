@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import {
+import type {
   Event as EventType,
   EventTag as EventTagType,
   Image as ImageType,
@@ -120,7 +120,7 @@ export function Form({
 
     if (!result) return;
 
-    handleDefaultImage({
+    await handleDefaultImage({
       file: entries.defaultImage,
       event: result,
     });
@@ -237,7 +237,7 @@ export function Form({
         <Button
           name="Salvar"
           style="green"
-          loading={isLoading || uploading}
+          loading={isLoading ?? uploading}
           type="submit"
         />
         <Button name="Remover" style="red" onAction={handleRemove} />

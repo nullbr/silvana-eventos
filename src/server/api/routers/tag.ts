@@ -7,19 +7,22 @@ import {
 } from "~/server/api/trpc";
 
 export const tagRouter = createTRPCRouter({
-  allTags: publicProcedure.query(async ({ ctx }) => {
-    const tags = await ctx.db.tag.findMany({
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-      select: {
-        id: true,
-        name: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+  allTags: publicProcedure
+    .input(z.object({ ids: z.array(z.string()).optional() }).optional())
+    .query(async ({ input, ctx }) => {
+      const tags = await ctx.db.tag.findMany({
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        where: input?.ids ? { id: { in: input.ids } } : undefined,
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
 
-    return { tags };
-  }),
+      return { tags };
+    }),
   create: protectedProcedure
     .input(
       z.object({

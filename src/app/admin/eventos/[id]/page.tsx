@@ -1,7 +1,8 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { Form, FormEntries } from "~/app/_components/Events/Form";
+import { Form } from "~/app/_components/Events/Form";
+import type { FormEntries } from "~/app/_components/Events/Form";
 import LoadingIndicator from "~/app/_components/Shared/LoadingIndicator";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import NotFound from "~/app/not-found";

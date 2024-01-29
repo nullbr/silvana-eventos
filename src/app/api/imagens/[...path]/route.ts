@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { getImageFromStorage } from "~/firebase/server/firebase";
 import { initAdmin } from "~/firebase/server/firebaseAdmin";
 

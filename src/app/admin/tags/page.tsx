@@ -1,5 +1,5 @@
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
-import { TableColumns, TableItem } from "~/app/_components/Table/Table";
+import type { TableColumns, TableItem } from "~/app/_components/Table/Table";
 import { TagsTable } from "~/app/_components/Tags/TagsTable";
 import { api } from "~/trpc/server";
 

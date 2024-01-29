@@ -15,10 +15,8 @@ export const storage = getStorage(app);
 
 export async function uploadImagesToStorage({
   files,
-  eventId,
 }: {
   files: FileList;
-  eventId?: string;
 }): Promise<UploadedImage[]> {
   const images = await Promise.all(
     Array.from(files).map(async (file) => uploadImageToStorage({ file })),

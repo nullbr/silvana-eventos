@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "~/app/_components/Shared/Button";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
-import { PaginationType } from "~/app/_components/Table/Pagination";
+import type { PaginationType } from "~/app/_components/Table/Pagination";
 import { Table } from "~/app/_components/Table/Table";
 import { api } from "~/trpc/react";
 

@@ -17,13 +17,10 @@ export default function RecentEvents() {
       )
       .data?.pages?.flatMap((page) => page.events) ?? [];
 
-  console.log(events);
-
   return (
     <>
       <div className="container py-12">
         <div className="-m-4 flex flex-wrap">
-          {!events.length && "Nenhum evento encontrado."}
           {events.slice(0, MAX_DISPLAY).map((event) => (
             <Card
               key={event.slug}
