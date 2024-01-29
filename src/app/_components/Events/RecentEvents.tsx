@@ -17,6 +17,8 @@ export default function RecentEvents() {
       )
       .data?.pages?.flatMap((page) => page.events) ?? [];
 
+  console.log(events);
+
   return (
     <>
       <div className="container py-12">

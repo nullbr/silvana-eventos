@@ -18,31 +18,20 @@ export async function uploadImagesToStorage({
   eventId,
 }: {
   files: FileList;
-  eventId: string;
-}) {
+  eventId?: string;
+}): Promise<UploadedImage[]> {
   const images = await Promise.all(
-    Array.from(files).map(async (file) =>
-      uploadImageToStorage({ file, eventId }),
-    ),
+    Array.from(files).map(async (file) => uploadImageToStorage({ file })),
   );
 
   return images;
 }
 
-function formatFileName(originalFileName: string) {
-  const formattedFileName = originalFileName.replace(/[^a-zA-Z0-9.-]/g, "_");
-  const finalFileName = formattedFileName.replace(/_+/g, "_");
-
-  return finalFileName;
-}
-
 export async function uploadImageToStorage({
   file,
-  eventId,
 }: {
   file: File;
-  eventId: string;
-}) {
+}): Promise<UploadedImage> {
   const fileName = formatFileName(file.name);
   const storageRef = ref(storage, fileName);
 
@@ -54,7 +43,18 @@ export async function uploadImageToStorage({
     url,
     fileName,
     extension: file.type,
-    eventId: eventId,
-    default: false,
   };
 }
+
+function formatFileName(originalFileName: string) {
+  const formattedFileName = originalFileName.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const finalFileName = formattedFileName.replace(/_+/g, "_");
+
+  return finalFileName;
+}
+
+export type UploadedImage = {
+  fileName: string;
+  url: string;
+  extension: string;
+};

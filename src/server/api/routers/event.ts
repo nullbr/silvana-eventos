@@ -1,3 +1,4 @@
+import { Event } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -70,16 +71,21 @@ export const eventRouter = createTRPCRouter({
         description: z.string(),
         date: z.date(),
         tags: z.array(z.string()).optional(),
+        defaultImageId: z.string().optional(),
       }),
     )
     .mutation(
-      async ({ input: { title, slug, description, date, tags }, ctx }) => {
+      async ({
+        input: { title, slug, description, date, tags, defaultImageId },
+        ctx,
+      }) => {
         const newEvent = await ctx.db.event.create({
           data: {
             title,
             slug,
             description,
             date,
+            defaultImageId,
           },
         });
 
@@ -120,6 +126,8 @@ export const eventRouter = createTRPCRouter({
   remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ input: id, ctx }) => {
+      await ctx.db.image.deleteMany({ where: { eventId: id } });
+
       const result = await ctx.db.event.delete({ where: { id } });
       return result;
     }),
@@ -132,10 +140,14 @@ export const eventRouter = createTRPCRouter({
         description: z.string().optional(),
         date: z.date().optional(),
         tags: z.array(z.string()),
+        defaultImageId: z.string().optional(),
       }),
     )
     .mutation(
-      async ({ input: { id, title, slug, description, date, tags }, ctx }) => {
+      async ({
+        input: { id, title, slug, description, date, tags, defaultImageId },
+        ctx,
+      }) => {
         const result = await ctx.db.event.update({
           where: { id },
           data: {
@@ -143,6 +155,7 @@ export const eventRouter = createTRPCRouter({
             slug,
             description,
             date,
+            defaultImageId,
           },
         });
 
@@ -156,4 +169,21 @@ export const eventRouter = createTRPCRouter({
         return result;
       },
     ),
+  updateDefaultImage: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        defaultImageId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input: { id, defaultImageId }, ctx }) => {
+      const result = await ctx.db.event.update({
+        where: { id },
+        data: {
+          defaultImageId,
+        },
+      });
+
+      return result;
+    }),
 });

@@ -8,6 +8,7 @@ import {
   Event as EventType,
   EventTag as EventTagType,
   Image as ImageType,
+  Event,
 } from "@prisma/client";
 import { Button } from "../Shared/Button";
 import { uploadImageToStorage } from "~/firebase/client/firebase";
@@ -25,7 +26,6 @@ export type FormEntries = {
   date: Date;
   description: string;
   tags: string[];
-  defaultImage?: string;
 };
 
 export function Form({
@@ -44,6 +44,9 @@ export function Form({
   const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
   const [uploading, setUploading] = useState(false);
   const { mutateAsync: createImage } = api.image.create.useMutation();
+  const { mutateAsync: deleteImage } = api.image.delete.useMutation();
+  const { mutateAsync: updateEvent } =
+    api.event.updateDefaultImage.useMutation();
   const { mutate: removeEvent, isLoading: isRemoving } =
     api.event.remove.useMutation({
       onSuccess: () => {
@@ -70,16 +73,27 @@ export function Form({
     removeEvent(event.id);
   }
 
-  async function handleDefaultImage(file: File) {
-    if (!event || uploading || !file) return;
+  async function handleDefaultImage({
+    file,
+    event,
+  }: {
+    file: File;
+    event: Event;
+  }) {
+    if (uploading || file.size === 0 || !event) return;
+
     setUploading(true);
 
-    const result = await uploadImageToStorage({ file, eventId: event.id });
+    if (event.defaultImageId) await deleteImage({ id: event.defaultImageId });
 
-    const newImage = await createImage(result);
+    const result = await uploadImageToStorage({ file });
+
+    if (result) {
+      const newImage = await createImage({ ...result, eventId: event.id });
+      await updateEvent({ id: event.id, defaultImageId: newImage.id });
+    }
+
     setUploading(false);
-
-    return newImage;
   }
 
   async function submitEvent(e: React.FormEvent<HTMLFormElement>) {
@@ -95,16 +109,20 @@ export function Form({
       defaultImage: File;
     };
 
-    const defaultImage = await handleDefaultImage(entries.defaultImage);
-
     const result = await handleSubmit({
-      id: event.id,
+      id: event?.id,
       title: entries.title,
       slug: entries.title.toLowerCase().replace(/\s/g, "-"),
       date: new Date(entries.date),
       description: entries.description,
       tags: selectedTags,
-      defaultImage: defaultImage?.id,
+    });
+
+    if (!result) return;
+
+    handleDefaultImage({
+      file: entries.defaultImage,
+      event: result,
     });
   }
 

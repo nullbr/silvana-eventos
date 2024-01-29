@@ -13,8 +13,6 @@ export default function Admin() {
         <Button href="/admin/eventos" name="Eventos" />
         <Button href="/admin/tags" name="Tags" style="green" />
       </nav>
-
-      <Image src={image} alt="event" width="200" height="200" />
     </div>
   );
 }

@@ -71,7 +71,7 @@ model Event {
 
     eventTags    EventTag[]
     eventImages  Image[]    @relation("EventImage")
-    defaultImage Image?     @relation(name: "DefaultImage", fields: [defaultImageId], references: [id], onDelete: SetNull)
+    defaultImage Image?     @relation(name: "DefaultImage", fields: [defaultImageId], references: [id], onDelete: Cascade)
 
     @@unique([id, createdAt])
     @@index([defaultImageId])

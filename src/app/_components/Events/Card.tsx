@@ -12,7 +12,7 @@ import Tag from "../Shared/Tag";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
 
-export async function Card({
+export function Card({
   event,
   eventTags,
   image,
@@ -23,13 +23,13 @@ export async function Card({
 }) {
   const { slug, date, title, description } = event;
   const imgSrc = image
-    ? `api/imagens/${image.fileName}`
-    : "images/default.jpeg";
+    ? `/api/imagens/${image.fileName}`
+    : "/images/default.jpeg";
   const href = `/eventos/${slug}`;
   const [tags, setTags] = useState<TagType[]>([]);
   const { data: tagsQuery } = api.tag.allTags.useQuery();
 
-  useEffect(() => {
+  http: useEffect(() => {
     if (!tagsQuery) return;
 
     const eventTagIds = eventTags.map((tag) => tag.tagId);

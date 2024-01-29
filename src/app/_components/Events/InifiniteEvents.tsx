@@ -3,7 +3,7 @@
 import { api } from "~/trpc/react";
 import LoadingIndicator from "../Shared/LoadingIndicator";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Card from "./Card";
+import { Card } from "./Card";
 
 export function InfiniteEvents() {
   const eventsQuery = api.event.infiniteEvents.useInfiniteQuery(
@@ -33,15 +33,10 @@ export function InfiniteEvents() {
       >
         {events.map((event) => (
           <Card
-            key={event.id}
-            event={{
-              slug: event.slug,
-              title: event.title,
-              description: event.description,
-              date: new Date(event.date),
-              tags: event.eventTags.map((tag) => tag.tagId),
-              images: event.eventImages.map((image) => image.url),
-            }}
+            key={event.slug}
+            event={event}
+            image={event.defaultImage ?? event.eventImages[0]}
+            eventTags={event.eventTags}
           />
         ))}
       </InfiniteScroll>

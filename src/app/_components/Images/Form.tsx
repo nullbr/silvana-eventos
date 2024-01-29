@@ -25,9 +25,9 @@ export function Form({
 
     if (!files || files.length === 0) return;
 
-    const uploadedFiles = await uploadImagesToStorage({ files, eventId });
+    const uploadedFiles = await uploadImagesToStorage({ files });
 
-    mutate({ images: uploadedFiles });
+    mutate({ images: uploadedFiles.map((file) => ({ ...file, eventId })) });
     setUploading(false);
     setFiles(null);
   }

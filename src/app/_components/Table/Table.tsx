@@ -45,11 +45,7 @@ export function Table({
   async function removeItem(id: string) {
     if (!handleRemove) return;
 
-    const result = await handleRemove(id);
-    if (!result) {
-      alert("Erro ao remover item");
-      return;
-    }
+    await handleRemove(id);
 
     if (!setData) return;
     setData((prev) => prev.filter((item) => item.id !== id));
@@ -109,11 +105,10 @@ export function Table({
                       className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600"
                     >
                       {columns.map((currentCol, idx) => (
-                        <td
-                          className="px-6 py-4"
-                          key={`${index}-${idx}`}
-                        >
-                          <p className="sm:max-w-36 truncate">{renderValue(item, currentCol)}</p>
+                        <td className="px-6 py-4" key={`${index}-${idx}`}>
+                          <p className="truncate sm:max-w-36">
+                            {renderValue(item, currentCol)}
+                          </p>
                         </td>
                       ))}
                       {(handleEdit ?? handleRemove) && !!item.id && (

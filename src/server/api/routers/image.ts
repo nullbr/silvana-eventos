@@ -28,7 +28,6 @@ export const imageRouter = createTRPCRouter({
       z.object({
         fileName: z.string(),
         url: z.string(),
-        default: z.boolean(),
         extension: z.string(),
         eventId: z.string(),
       }),
@@ -41,7 +40,6 @@ export const imageRouter = createTRPCRouter({
           z.object({
             fileName: z.string(),
             url: z.string(),
-            default: z.boolean(),
             extension: z.string(),
             eventId: z.string(),
           }),
@@ -54,5 +52,12 @@ export const imageRouter = createTRPCRouter({
       });
 
       return newImages;
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input: { id }, ctx }) => {
+      const image = await ctx.db.image.delete({ where: { id } });
+
+      return image;
     }),
 });
