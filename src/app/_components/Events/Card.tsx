@@ -6,7 +6,6 @@ import type {
   Image as ImageType,
   Tag as TagType,
 } from "@prisma/client";
-import Image from "../Shared/Image";
 import Link from "../Shared/Link";
 import Tag from "../Shared/Tag";
 import { api } from "~/trpc/react";
@@ -49,7 +48,7 @@ export function Card({
       >
         {imgSrc && (
           <Link href={href} aria-label={`Link to ${title}`}>
-            <Image
+            <img
               alt={title}
               src={imgSrc}
               className="object-cover object-center md:h-36 lg:h-48"
