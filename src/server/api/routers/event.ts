@@ -42,9 +42,11 @@ export const eventRouter = createTRPCRouter({
           title: true,
           description: true,
           date: true,
+          defaultImageId: true,
           createdAt: true,
           updatedAt: true,
           _count: { select: { eventImages: true } },
+          defaultImage: true,
           eventImages: true,
           eventTags: true,
         },
@@ -78,7 +80,6 @@ export const eventRouter = createTRPCRouter({
             slug,
             description,
             date,
-            userId: ctx.session.user.id,
           },
         });
 
@@ -109,6 +110,8 @@ export const eventRouter = createTRPCRouter({
           date: true,
           createdAt: true,
           updatedAt: true,
+          defaultImageId: true,
+          defaultImage: true,
           eventImages: true,
           eventTags: true,
         },
@@ -150,10 +153,7 @@ export const eventRouter = createTRPCRouter({
           });
         }
 
-        return {
-          ...result,
-          eventTags: tags,
-        };
+        return result;
       },
     ),
 });

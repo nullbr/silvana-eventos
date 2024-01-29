@@ -13,7 +13,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const storage = getStorage(app);
 
-export async function uploadImageToStorage({
+export async function uploadImagesToStorage({
   files,
   eventId,
 }: {
@@ -21,22 +21,9 @@ export async function uploadImageToStorage({
   eventId: string;
 }) {
   const images = await Promise.all(
-    Array.from(files).map(async (file) => {
-      const fileName = formatFileName(file.name);
-      const storageRef = ref(storage, fileName);
-
-      await uploadBytes(storageRef, file);
-
-      const url = await getDownloadURL(storageRef);
-
-      return {
-        url,
-        fileName,
-        extension: file.type,
-        eventId: eventId,
-        default: false,
-      };
-    }),
+    Array.from(files).map(async (file) =>
+      uploadImageToStorage({ file, eventId }),
+    ),
   );
 
   return images;
@@ -47,4 +34,27 @@ function formatFileName(originalFileName: string) {
   const finalFileName = formattedFileName.replace(/_+/g, "_");
 
   return finalFileName;
+}
+
+export async function uploadImageToStorage({
+  file,
+  eventId,
+}: {
+  file: File;
+  eventId: string;
+}) {
+  const fileName = formatFileName(file.name);
+  const storageRef = ref(storage, fileName);
+
+  await uploadBytes(storageRef, file);
+
+  const url = await getDownloadURL(storageRef);
+
+  return {
+    url,
+    fileName,
+    extension: file.type,
+    eventId: eventId,
+    default: false,
+  };
 }

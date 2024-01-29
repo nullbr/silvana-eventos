@@ -1,20 +1,44 @@
+"use client";
+
+import {
+  Event,
+  EventTag,
+  Image as ImageType,
+  Tag as TagType,
+} from "@prisma/client";
 import Image from "../Shared/Image";
 import Link from "../Shared/Link";
 import Tag from "../Shared/Tag";
+import { api } from "~/trpc/react";
+import { useEffect, useState } from "react";
 
-type Event = {
-  slug: string;
-  title: string;
-  description: string;
-  date: Date;
-  tags: string[];
-  images: string[];
-};
-
-const Card = ({ event }: { event: Event }) => {
-  const { slug, date, title, description, tags } = event;
-  const imgSrc = "/static/images/google.png";
+export async function Card({
+  event,
+  eventTags,
+  image,
+}: {
+  event: Event;
+  eventTags: EventTag[];
+  image?: ImageType;
+}) {
+  const { slug, date, title, description } = event;
+  const imgSrc = image
+    ? `api/imagens/${image.fileName}`
+    : "images/default.jpeg";
   const href = `/eventos/${slug}`;
+  const [tags, setTags] = useState<TagType[]>([]);
+  const { data: tagsQuery } = api.tag.allTags.useQuery();
+
+  useEffect(() => {
+    if (!tagsQuery) return;
+
+    const eventTagIds = eventTags.map((tag) => tag.tagId);
+    const tagObjects = eventTagIds.map(
+      (tagId) => tagsQuery?.tags.find((tag) => tag.id === tagId),
+    ) as TagType[];
+
+    setTags(tagObjects);
+  }, [tagsQuery]);
 
   return (
     <div className="md max-w-[544px] p-4 md:w-1/2">
@@ -50,7 +74,7 @@ const Card = ({ event }: { event: Event }) => {
           </h2>
           <div className="flex flex-wrap">
             {tags.map((tag) => (
-              <Tag key={tag} tag={tag} />
+              <Tag key={tag.id} tag={tag.name} />
             ))}
           </div>
           <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
@@ -67,6 +91,4 @@ const Card = ({ event }: { event: Event }) => {
       </div>
     </div>
   );
-};
-
-export default Card;
+}

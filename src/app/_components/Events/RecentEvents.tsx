@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import Card from "./Card";
+import { Card } from "./Card";
 import CustomLink from "../Shared/Link";
 
 const MAX_DISPLAY = 6;
@@ -25,12 +25,9 @@ export default function RecentEvents() {
           {events.slice(0, MAX_DISPLAY).map((event) => (
             <Card
               key={event.slug}
-              event={{
-                ...event,
-                date: new Date(event.date),
-                tags: event.eventTags.map((tag) => tag.tagId),
-                images: event.eventImages.map((image) => image.url),
-              }}
+              event={event}
+              image={event.defaultImage ?? event.eventImages[0]}
+              eventTags={event.eventTags}
             />
           ))}
         </div>

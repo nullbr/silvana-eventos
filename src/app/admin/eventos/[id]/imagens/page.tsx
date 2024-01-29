@@ -19,8 +19,6 @@ export default function Images({ params }: { params: { id: string } }) {
   });
   const { data: event } = api.event.find.useQuery({ id: params.id });
 
-  console.log("images", images);
-
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       <PageTitle title={`Adicionar imagens a ${event?.title}`} />

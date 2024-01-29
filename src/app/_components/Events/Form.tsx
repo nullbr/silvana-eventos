@@ -4,26 +4,46 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import { EventType } from "~/types/Event";
+import {
+  Event as EventType,
+  EventTag as EventTagType,
+  Image as ImageType,
+} from "@prisma/client";
 import { Button } from "../Shared/Button";
+import { uploadImageToStorage } from "~/firebase/client/firebase";
+
+export type FullEvent = EventType & {
+  eventTags: EventTagType[];
+  eventImages: ImageType[];
+  defaultImage: ImageType | null;
+};
+
+export type FormEntries = {
+  id: string;
+  title: string;
+  slug: string;
+  date: Date;
+  description: string;
+  tags: string[];
+  defaultImage?: string;
+};
 
 export function Form({
   handleSubmit,
   isLoading,
   event,
 }: {
-  handleSubmit: (
-    e: React.FormEvent<HTMLFormElement>,
-    selectedTags: string[],
-  ) => void;
+  handleSubmit: (entries: FormEntries) => Promise<EventType | undefined>;
   isLoading?: boolean;
-  event?: EventType;
+  event?: FullEvent;
 }) {
   const session = useSession();
   const router = useRouter();
   const tags = api.tag.allTags.useQuery();
   const eventTags = event?.eventTags.map((tag) => tag.tagId) ?? [];
   const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
+  const [uploading, setUploading] = useState(false);
+  const { mutateAsync: createImage } = api.image.create.useMutation();
   const { mutate: removeEvent, isLoading: isRemoving } =
     api.event.remove.useMutation({
       onSuccess: () => {
@@ -50,11 +70,49 @@ export function Form({
     removeEvent(event.id);
   }
 
+  async function handleDefaultImage(file: File) {
+    if (!event || uploading || !file) return;
+    setUploading(true);
+
+    const result = await uploadImageToStorage({ file, eventId: event.id });
+
+    const newImage = await createImage(result);
+    setUploading(false);
+
+    return newImage;
+  }
+
+  async function submitEvent(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isLoading ?? isRemoving ?? !event) return;
+
+    const formData = new FormData(e.currentTarget);
+    const entries = Object.fromEntries(formData.entries()) as {
+      title: string;
+      description: string;
+      date: string;
+      tags: string;
+      defaultImage: File;
+    };
+
+    const defaultImage = await handleDefaultImage(entries.defaultImage);
+
+    const result = await handleSubmit({
+      id: event.id,
+      title: entries.title,
+      slug: entries.title.toLowerCase().replace(/\s/g, "-"),
+      date: new Date(entries.date),
+      description: entries.description,
+      tags: selectedTags,
+      defaultImage: defaultImage?.id,
+    });
+  }
+
   if (session.status === "loading") return null;
   if (session.status !== "authenticated") return redirect("/api/auth/signin");
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, selectedTags)}>
+    <form onSubmit={submitEvent}>
       <div className="mb-6 grid gap-6 md:grid-cols-2">
         <div>
           <label
@@ -90,7 +148,7 @@ export function Form({
           />
         </div>
       </div>
-      <div className="mb-6">
+      <div className="mb-6 grid gap-6">
         <div>
           <label
             htmlFor="description"
@@ -106,6 +164,22 @@ export function Form({
             rows={4}
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             placeholder="Detalhes do evento..."
+          />
+        </div>
+
+        <div>
+          <label
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+            htmlFor="defaultImage"
+          >
+            Imagem capa
+          </label>
+          <input
+            className="block w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
+            id="defaultImage"
+            type="file"
+            accept="image/png, image/jpeg, image/jpg"
+            name="defaultImage"
           />
         </div>
       </div>
@@ -142,9 +216,16 @@ export function Form({
       </div>
 
       <div className="flex gap-2">
-        <Button name="Salvar" style="green" loading={isLoading} type="submit" />
+        <Button
+          name="Salvar"
+          style="green"
+          loading={isLoading || uploading}
+          type="submit"
+        />
         <Button name="Remover" style="red" onAction={handleRemove} />
-        <Button name="Imagens" href={`/admin/eventos/${event?.id}/imagens`} />
+        {event && (
+          <Button name="Imagens" href={`/admin/eventos/${event?.id}/imagens`} />
+        )}
         <Button name="Voltar" href="/admin/eventos" style="light" />
       </div>
     </form>

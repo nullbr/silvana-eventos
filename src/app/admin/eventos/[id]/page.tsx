@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { Form } from "~/app/_components/Events/Form";
+import { Form, FormEntries } from "~/app/_components/Events/Form";
 import LoadingIndicator from "~/app/_components/Shared/LoadingIndicator";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import NotFound from "~/app/not-found";
@@ -13,7 +13,7 @@ export default function EventPage() {
   if (!id) return <NotFound />;
 
   const { data: event, isLoading } = api.event.find.useQuery({ id });
-  const updateEvent = api.event.update.useMutation({
+  const { mutateAsync: updateEvent } = api.event.update.useMutation({
     onSuccess: () => {
       console.log("Evento atualizado com sucesso!");
       router.push("/admin/eventos");
@@ -23,30 +23,10 @@ export default function EventPage() {
     },
   });
 
-  function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>,
-    selectedTags: string[],
-  ) {
-    e.preventDefault();
+  async function handleSubmit(entries: FormEntries) {
+    const updatedEvent = await updateEvent(entries);
 
-    if (!event) return;
-
-    const formData = new FormData(e.currentTarget);
-    const entries = Object.fromEntries(formData.entries()) as {
-      title: string;
-      description: string;
-      date: string;
-      tags: string;
-    };
-
-    updateEvent.mutate({
-      id: event.id,
-      title: entries.title,
-      slug: entries.title.toLowerCase().replace(/\s/g, "-"),
-      date: new Date(entries.date),
-      description: entries.description,
-      tags: selectedTags,
-    });
+    return updatedEvent;
   }
 
   if (!event && !isLoading) return <NotFound />;

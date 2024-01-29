@@ -26,6 +26,17 @@ export const imageRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
+        fileName: z.string(),
+        url: z.string(),
+        default: z.boolean(),
+        extension: z.string(),
+        eventId: z.string(),
+      }),
+    )
+    .mutation(({ input: image, ctx }) => ctx.db.image.create({ data: image })),
+  createMultiple: protectedProcedure
+    .input(
+      z.object({
         images: z.array(
           z.object({
             fileName: z.string(),
