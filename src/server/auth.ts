@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
             if (verifyToken) {
               const user = await db.user.findFirst({
                 where: {
-                  email: token.user.email as string,
+                  email: (token.user as AuthUser).email,
                 },
               });
 
@@ -102,8 +102,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user = {
-          email: token.user.email as string,
-          id: token.user.id as string,
+          email: (token.user as AuthUser).email,
+          id: (token.user as AuthUser).id,
         };
       }
       session.error = token.error;
