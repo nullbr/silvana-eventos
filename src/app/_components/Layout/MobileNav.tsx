@@ -82,6 +82,7 @@ const MobileNav = () => {
               href="/admin"
               title="Admin"
               cls="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+              onClick={onToggleNav}
             />
           </div>
         </nav>
