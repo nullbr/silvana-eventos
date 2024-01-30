@@ -20,7 +20,7 @@ export function Card({
   eventTags: EventTag[];
   image?: ImageType;
 }) {
-  const { slug, date, title, description } = event;
+  const { slug, date, title, description } = event ?? {};
   const imgSrc = image
     ? `/api/imagens/${image.fileName}`
     : "/images/default.jpeg";

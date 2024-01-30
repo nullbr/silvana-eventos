@@ -1,13 +1,18 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { env } from "~/env";
 import { db } from "~/server/db";
+import bcrypt from "bcrypt";
+import {
+  AuthUser,
+  jwtHelper,
+  tokenOnWeek,
+  tokenOneDay,
+} from "~/utils/jwtHelper";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -36,24 +41,114 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
-  },
   adapter: PrismaAdapter(db),
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60,
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      // credentials provider:  Save the access token and refresh token in the JWT on the initial login
+      if (user) {
+        const authUser = { id: user.id, email: user.email } as AuthUser;
+
+        const accessToken = await jwtHelper.createAcessToken(authUser);
+        const refreshToken = await jwtHelper.createRefreshToken(authUser);
+        const accessTokenExpired = Date.now() / 1000 + tokenOneDay;
+        const refreshTokenExpired = Date.now() / 1000 + tokenOnWeek;
+
+        return {
+          ...token,
+          accessToken,
+          refreshToken,
+          accessTokenExpired,
+          refreshTokenExpired,
+          user: authUser,
+        };
+      } else {
+        if (token) {
+          // In subsequent requests, check access token has expired, try to refresh it
+          if (Date.now() / 1000 > token.accessTokenExpired) {
+            const verifyToken = await jwtHelper.verifyToken(token.refreshToken);
+
+            if (verifyToken) {
+              const user = await db.user.findFirst({
+                where: {
+                  email: token.user.email as string,
+                },
+              });
+
+              if (user) {
+                const accessToken = await jwtHelper.createAcessToken(
+                  token.user as AuthUser,
+                );
+                const accessTokenExpired = Date.now() / 1000 + tokenOneDay;
+
+                console.log("refresh token", accessToken);
+                console.log("refresh token", accessTokenExpired);
+
+                return { ...token, accessToken, accessTokenExpired };
+              }
+            }
+
+            return { ...token, error: "RefreshAccessTokenError" };
+          }
+        }
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          email: token.user.email as string,
+          id: token.user.id as string,
+        };
+      }
+      session.error = token.error;
+      return session;
+    },
+  },
   providers: [
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
-    GitHubProvider({
-      clientId: env.GITHUB_ID,
-      clientSecret: env.GITHUB_SECRET,
+    CredentialsProvider({
+      id: "next-auth",
+      name: "Login with email",
+      async authorize(credentials, _req) {
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials?.email },
+          });
+
+          if (user && credentials) {
+            const validPassword = await bcrypt.compare(
+              credentials?.password,
+              user.password ?? "",
+            );
+
+            if (validPassword) {
+              return {
+                id: user.id,
+                name: user.name,
+              };
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return null;
+      },
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "jsmith",
+        },
+        password: {
+          label: "Senha",
+          type: "password",
+        },
+      },
     }),
   ],
 };

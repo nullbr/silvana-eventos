@@ -34,6 +34,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string(),
     FIREBASE_PRIVATE_KEY: z.string(),
     FIREBASE_CLIENT_EMAIL: z.string(),
+    JWT_SECRET: z.string(),
   },
 
   /**
@@ -65,6 +66,7 @@ export const env = createEnv({
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET:
       process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    JWT_SECRET: process.env.JWT_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
