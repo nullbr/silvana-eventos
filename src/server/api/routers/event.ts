@@ -125,6 +125,13 @@ export const eventRouter = createTRPCRouter({
   remove: protectedProcedure
     .input(z.string())
     .mutation(async ({ input: id, ctx }) => {
+      await ctx.db.event.update({
+        where: { id },
+        data: {
+          defaultImageId: null,
+        },
+      });
+
       await ctx.db.image.deleteMany({ where: { eventId: id } });
 
       const result = await ctx.db.event.delete({ where: { id } });
