@@ -75,13 +75,15 @@ const MobileNav = () => {
               >
                 {link.title}
               </Link>
-              <ProtectedLink
-                href="/admin"
-                title="Admin"
-                cls="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
-              />
             </div>
           ))}
+          <div className="px-12 py-4">
+            <ProtectedLink
+              href="/admin"
+              title="Admin"
+              cls="text-2xl font-bold tracking-widest text-gray-900 dark:text-gray-100"
+            />
+          </div>
         </nav>
       </div>
     </>
