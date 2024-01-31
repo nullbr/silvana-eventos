@@ -7,8 +7,8 @@ export const siteMetadata = {
   theme: "system", // system, dark or light
   siteUrl: "https://silvanaeventos.com.br",
   siteRepo: "https://github.com/nullbr/silvana-eventos",
-  siteLogo: "/static/images/logo.png",
-  socialBanner: "/static/images/twitter-card.png",
+  siteLogo: "/static/images/twitter-card.jpeg",
+  socialBanner: "/static/images/twitter-card.jpeg",
   mastodon: "https://mastodon.social/@mastodonuser",
   email: "address@yoursite.com",
   github: "https://github.com/nullbr",
