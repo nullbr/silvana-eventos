@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, getDownloadURL, uploadBytes, ref } from "firebase/storage";
+import {
+  getStorage,
+  getDownloadURL,
+  uploadBytes,
+  ref,
+  deleteObject,
+} from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDLX0yeqImC7rHBuLPyrHLIALVSu_wEm5s",
@@ -44,11 +50,15 @@ export async function uploadImageToStorage({
   };
 }
 
-function formatFileName(originalFileName: string) {
-  const formattedFileName = originalFileName.replace(/[^a-zA-Z0-9.-]/g, "_");
-  const finalFileName = formattedFileName.replace(/_+/g, "_").slice(0, 50);
-
-  return finalFileName;
+export function deleteImageFromStorage({ filename }: { filename: string }) {
+  const storageRef = ref(storage, filename);
+  deleteObject(storageRef)
+    .then(() => {
+      console.log("File deleted successfully");
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
 }
 
 export type UploadedImage = {
@@ -56,3 +66,10 @@ export type UploadedImage = {
   url: string;
   extension: string;
 };
+
+function formatFileName(originalFileName: string) {
+  const formattedFileName = originalFileName.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const finalFileName = formattedFileName.replace(/_+/g, "_").slice(0, 50);
+
+  return finalFileName;
+}
