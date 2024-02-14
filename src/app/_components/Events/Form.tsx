@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import type {
@@ -10,8 +10,8 @@ import type {
   Image as ImageType,
   Event,
 } from "@prisma/client";
-import { Button } from "../Shared/Button";
 import { uploadImageToStorage } from "~/firebase/client/firebase";
+import { Buttons } from "./Buttons";
 
 export type FullEvent = EventType & {
   eventTags: EventTagType[];
@@ -26,6 +26,7 @@ export type FormEntries = {
   date: Date;
   description: string;
   tags: string[];
+  preview: boolean;
 };
 
 export function Form({
@@ -38,25 +39,15 @@ export function Form({
   event?: FullEvent;
 }) {
   const session = useSession();
-  const router = useRouter();
   const tags = api.tag.allTags.useQuery();
   const eventTags = event?.eventTags.map((tag) => tag.tagId) ?? [];
   const [selectedTags, setSelectedTags] = useState<string[]>(eventTags);
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(event?.preview ?? false);
   const { mutateAsync: createImage } = api.image.create.useMutation();
   const { mutateAsync: deleteImage } = api.image.delete.useMutation();
   const { mutateAsync: updateEvent } =
     api.event.updateDefaultImage.useMutation();
-  const { mutate: removeEvent, isLoading: isRemoving } =
-    api.event.remove.useMutation({
-      onSuccess: () => {
-        console.log("Evento removido com sucesso!");
-        router.push("/admin/eventos");
-      },
-      onError: (err) => {
-        alert(err.message);
-      },
-    });
 
   function toggleTag(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked)
@@ -65,12 +56,6 @@ export function Form({
     return setSelectedTags((prev) =>
       prev.filter((item) => item !== e.target.value),
     );
-  }
-
-  function handleRemove() {
-    if (isLoading ?? isRemoving ?? !event) return;
-
-    removeEvent(event.id);
   }
 
   async function handleDefaultImage({
@@ -98,7 +83,7 @@ export function Form({
 
   async function submitEvent(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (isLoading ?? isRemoving ?? !event) return;
+    if (isLoading ?? !event) return;
 
     const formData = new FormData(e.currentTarget);
     const entries = Object.fromEntries(formData.entries()) as {
@@ -107,6 +92,7 @@ export function Form({
       date: string;
       tags: string;
       defaultImage: File;
+      preview: string;
     };
 
     const result = await handleSubmit({
@@ -116,6 +102,7 @@ export function Form({
       date: new Date(entries.date),
       description: entries.description,
       tags: selectedTags,
+      preview: !!entries?.preview,
     });
 
     if (!result) return;
@@ -128,6 +115,8 @@ export function Form({
 
   if (session.status === "loading") return null;
   if (session.status !== "authenticated") return redirect("/api/auth/signin");
+
+  console.log(event);
 
   return (
     <form onSubmit={submitEvent}>
@@ -184,8 +173,10 @@ export function Form({
             placeholder="Detalhes do evento..."
           />
         </div>
+      </div>
 
-        <div>
+      <div className="mb-6 flex flex-col gap-6 md:flex-row">
+        <div className="flex-1">
           <label
             className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
             htmlFor="defaultImage"
@@ -199,6 +190,26 @@ export function Form({
             accept="image/png, image/jpeg, image/jpg"
             name="defaultImage"
           />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+            Preview
+          </label>
+          <div className="relative cursor-pointer items-center">
+            <input
+              id="preview"
+              name="preview"
+              type="checkbox"
+              className="peer sr-only"
+              checked={preview}
+              onChange={() => {}}
+            />
+            <div
+              onClick={() => setPreview((prev) => !prev)}
+              className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800 rtl:peer-checked:after:-translate-x-full"
+            />
+          </div>
         </div>
       </div>
       <div className="mb-6 grid gap-6 md:grid-cols-2">
@@ -229,23 +240,16 @@ export function Form({
                 </label>
               </div>
             ))}
+            {tags.data?.tags.length === 0 && (
+              <p className="text-gray-500 dark:text-gray-400">
+                Nenhuma tag cadastrada
+              </p>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="flex gap-2">
-        <Button
-          name="Salvar"
-          style="green"
-          loading={isLoading ?? uploading}
-          type="submit"
-        />
-        <Button name="Remover" style="red" onAction={handleRemove} />
-        {event && (
-          <Button name="Imagens" href={`/admin/eventos/${event?.id}/imagens`} />
-        )}
-        <Button name="Voltar" href="/admin/eventos" style="light" />
-      </div>
+      <Buttons event={event} isLoading={isLoading ?? uploading} />
     </form>
   );
 }

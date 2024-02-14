@@ -69,6 +69,7 @@ model Event {
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
     defaultImageId String?
+    preview        Boolean  @default(false)
 
     eventTags    EventTag[]
     eventImages  Image[]    @relation("EventImage")
@@ -84,6 +85,7 @@ model Image {
     fileName  String
     url       String
     extension String
+    index     Int      @default(0)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

@@ -49,6 +49,7 @@ export const eventRouter = createTRPCRouter({
           defaultImage: true,
           eventImages: true,
           eventTags: true,
+          preview: true,
         },
       });
 
@@ -71,11 +72,20 @@ export const eventRouter = createTRPCRouter({
         date: z.date(),
         tags: z.array(z.string()).optional(),
         defaultImageId: z.string().optional(),
+        preview: z.boolean(),
       }),
     )
     .mutation(
       async ({
-        input: { title, slug, description, date, tags, defaultImageId },
+        input: {
+          title,
+          slug,
+          description,
+          date,
+          tags,
+          defaultImageId,
+          preview,
+        },
         ctx,
       }) => {
         const newEvent = await ctx.db.event.create({
@@ -85,6 +95,7 @@ export const eventRouter = createTRPCRouter({
             description,
             date,
             defaultImageId,
+            preview,
           },
         });
 
@@ -119,6 +130,7 @@ export const eventRouter = createTRPCRouter({
           defaultImage: true,
           eventImages: true,
           eventTags: true,
+          preview: true,
         },
       });
     }),
@@ -147,11 +159,21 @@ export const eventRouter = createTRPCRouter({
         date: z.date().optional(),
         tags: z.array(z.string()),
         defaultImageId: z.string().optional(),
+        preview: z.boolean(),
       }),
     )
     .mutation(
       async ({
-        input: { id, title, slug, description, date, tags, defaultImageId },
+        input: {
+          id,
+          title,
+          slug,
+          description,
+          date,
+          tags,
+          defaultImageId,
+          preview,
+        },
         ctx,
       }) => {
         const result = await ctx.db.event.update({
@@ -162,6 +184,7 @@ export const eventRouter = createTRPCRouter({
             description,
             date,
             defaultImageId,
+            preview,
           },
         });
 

@@ -10,6 +10,7 @@ import Link from "../Shared/Link";
 import Tag from "../Shared/Tag";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 export function Card({
   event,
@@ -20,6 +21,7 @@ export function Card({
   eventTags: EventTag[];
   image?: ImageType;
 }) {
+  const session = useSession();
   const { slug, date, title, description } = event ?? {};
   const imgSrc = image
     ? `/api/imagens/${image.fileName}`
@@ -38,6 +40,10 @@ export function Card({
 
     setTags(tagObjects);
   }, [tagsQuery, eventTags]);
+
+  if (event.preview && session.status !== "authenticated") return null;
+
+  console.log(event.preview);
 
   return (
     <div className="md max-w-[544px] p-4 md:w-1/2">

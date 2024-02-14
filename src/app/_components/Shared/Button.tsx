@@ -16,6 +16,7 @@ export function Button({
   style,
   className,
   loading = false,
+  disabled = false,
 }: {
   onAction?: () => void | Promise<void>;
   outline?: boolean;
@@ -24,6 +25,7 @@ export function Button({
   href?: string;
   className?: string;
   loading?: boolean;
+  disabled?: boolean;
   style?:
     | "alternative"
     | "dark"
@@ -115,7 +117,7 @@ export function Button({
     <button
       type={type}
       onClick={onAction}
-      disabled={loading}
+      disabled={loading ?? disabled}
       className={`${classes} ${defaultClasses} ${className} ${
         loading ? loadingClasses : ""
       }}`}
