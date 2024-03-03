@@ -1,6 +1,6 @@
 import { encode, decode } from "next-auth/jwt";
 import { env } from "../env.js";
-import { JWT } from "next-auth/jwt";
+import type { JWT } from "next-auth/jwt";
 
 export type AuthUser = { id: string; email: string } & JWT;
 

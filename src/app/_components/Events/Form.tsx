@@ -203,7 +203,7 @@ export function Form({
               type="checkbox"
               className="peer sr-only"
               checked={preview}
-              onChange={() => {}}
+              onChange={() => setPreview((prev) => !prev)}
             />
             <div
               onClick={() => setPreview((prev) => !prev)}

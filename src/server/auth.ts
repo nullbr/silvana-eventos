@@ -7,12 +7,8 @@ import {
 } from "next-auth";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
-import {
-  AuthUser,
-  jwtHelper,
-  tokenOnWeek,
-  tokenOneDay,
-} from "~/utils/jwtHelper";
+import type { AuthUser } from "~/utils/jwtHelper";
+import { jwtHelper, tokenOnWeek, tokenOneDay } from "~/utils/jwtHelper";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

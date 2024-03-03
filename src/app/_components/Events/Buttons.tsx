@@ -1,6 +1,6 @@
 import { api } from "~/trpc/react";
 import { Button } from "../Shared/Button";
-import { FullEvent } from "./Form";
+import type { FullEvent } from "./Form";
 import { useRouter } from "next/navigation";
 
 export function Buttons({

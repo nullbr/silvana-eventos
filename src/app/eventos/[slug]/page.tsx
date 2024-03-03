@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Header } from "~/app/_components/Events/Header";
 import { api } from "~/trpc/server";
 
@@ -23,11 +24,13 @@ export default async function Event({ params }: { params: { slug: string } }) {
               key={image.id}
               className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 shadow-lg dark:border-gray-600"
             >
-              <img
+              <Image
                 className="h-full w-full object-contain"
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
                 src={`/api/imagens/${image.fileName}`}
                 alt={image.fileName}
+                height={224}
+                width={224}
               />
             </div>
           ))}

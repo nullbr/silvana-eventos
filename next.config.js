@@ -7,7 +7,7 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["firebasestorage.googleapis.com"],
+    remotePatterns: [{ hostname: "firebasestorage.googleapis.com" }],
   },
   experimental: {
     serverActions: {

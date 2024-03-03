@@ -1,14 +1,15 @@
 "use client";
 
-import { Image } from "@prisma/client";
+import type { Image as ImageType } from "@prisma/client";
 import { FaXmark } from "react-icons/fa6";
 import { MdDragIndicator } from "react-icons/md";
 import { deleteImageFromStorage } from "~/firebase/client/firebase";
 import { ConfirmationModal } from "../Shared/ConfirmationModal";
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import Image from "next/image";
 
-export function ImageCard({ image }: { image: Image }) {
+export function ImageCard({ image }: { image: ImageType }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { mutate } = api.image.delete.useMutation({
     onSuccess: () => {
@@ -24,7 +25,7 @@ export function ImageCard({ image }: { image: Image }) {
   return (
     <>
       <div className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 shadow-lg dark:border-gray-600 dark:bg-gray-700">
-        <img
+        <Image
           className="h-full w-full object-contain"
           style={{ maxWidth: "100%", maxHeight: "100%" }}
           src={`/api/imagens/${image.fileName}`}

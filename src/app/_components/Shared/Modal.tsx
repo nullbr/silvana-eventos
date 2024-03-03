@@ -27,7 +27,7 @@ const Modal = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [closeFn]);
 
   return (
     <div

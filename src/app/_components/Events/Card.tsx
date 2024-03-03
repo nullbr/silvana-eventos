@@ -11,6 +11,7 @@ import Tag from "../Shared/Tag";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export function Card({
   event,
@@ -43,8 +44,6 @@ export function Card({
 
   if (event.preview && session.status !== "authenticated") return null;
 
-  console.log(event.preview);
-
   return (
     <div className="md max-w-[544px] p-4 md:w-1/2">
       <div
@@ -54,7 +53,7 @@ export function Card({
       >
         {imgSrc && (
           <Link href={href} aria-label={`Link to ${title}`}>
-            <img
+            <Image
               alt={title}
               src={imgSrc}
               className="object-cover object-center md:h-36 lg:h-48"
