@@ -54,6 +54,7 @@ export function Card({
         {imgSrc && (
           <Link href={href} aria-label={`Link to ${title}`}>
             <Image
+              placeholder="blur"
               alt={title}
               src={imgSrc}
               className="object-cover object-center md:h-36 lg:h-48"

@@ -25,6 +25,7 @@ export default async function Event({ params }: { params: { slug: string } }) {
               className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 shadow-lg dark:border-gray-600"
             >
               <Image
+                placeholder="blur"
                 className="h-full w-full object-contain"
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
                 src={`/api/imagens/${image.fileName}`}

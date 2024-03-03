@@ -29,7 +29,7 @@ export default function Images({ params }: { params: { id: string } }) {
         {!images && isLoading ? (
           <LoadingIndicator />
         ) : (
-          <ImagesList images={images?.images ?? []} />
+          <Image placeholder="blur" sList images={images?.images ?? []} />
         )}
       </div>
     </div>
