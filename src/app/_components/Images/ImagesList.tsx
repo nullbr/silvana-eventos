@@ -5,7 +5,7 @@ export function ImagesList({ images }: { images: ImageType[] }) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4 py-4">
       {images.map((image) => (
-        <Image placeholder="blur" Card key={image.id} image={image} />
+        <ImageCard key={image.id} image={image} />
       ))}
     </div>
   );

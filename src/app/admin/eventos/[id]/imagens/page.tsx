@@ -4,8 +4,8 @@ import { Form } from "~/app/_components/Images/Form";
 import { PageTitle } from "~/app/_components/Shared/PageTitle";
 import NotFound from "~/app/not-found";
 import { api } from "~/trpc/react";
-import { ImagesList } from "~/app/_components/Images/ImagesList";
 import LoadingIndicator from "~/app/_components/Shared/LoadingIndicator";
+import { ImagesList } from "~/app/_components/Images/ImagesList";
 
 export default function Images({ params }: { params: { id: string } }) {
   if (!params?.id) return <NotFound />;
@@ -29,7 +29,7 @@ export default function Images({ params }: { params: { id: string } }) {
         {!images && isLoading ? (
           <LoadingIndicator />
         ) : (
-          <Image placeholder="blur" sList images={images?.images ?? []} />
+          <ImagesList images={images?.images ?? []} />
         )}
       </div>
     </div>

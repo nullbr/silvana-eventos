@@ -17,10 +17,12 @@ export function Card({
   event,
   eventTags,
   image,
+  imageCount,
 }: {
   event: Event;
   eventTags: EventTag[];
   image?: ImageType;
+  imageCount: number;
 }) {
   const session = useSession();
   const { slug, date, title, description } = event ?? {};
@@ -52,14 +54,20 @@ export function Card({
         }  overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
       >
         {imgSrc && (
-          <Link href={href} aria-label={`Link to ${title}`}>
+          <Link
+            href={href}
+            aria-label={`Link to ${title}`}
+            disable={imageCount <= 1}
+          >
             <Image
               placeholder="blur"
+              blurDataURL="/images/default.jpeg"
               alt={title}
               src={imgSrc}
               className="object-cover object-center md:h-36 lg:h-48"
               width={544}
               height={306}
+              quality={80}
             />
           </Link>
         )}
@@ -73,7 +81,11 @@ export function Card({
             </dd>
           </dl>
           <h2 className="my-3 text-2xl font-bold leading-8 tracking-tight">
-            <Link href={href} aria-label={`Link to ${title}`}>
+            <Link
+              href={href}
+              aria-label={`Link to ${title}`}
+              disable={imageCount <= 1}
+            >
               {title}
             </Link>
           </h2>
@@ -85,13 +97,15 @@ export function Card({
           <p className="prose mb-3 max-w-none text-gray-500 dark:text-gray-400">
             {description}
           </p>
-          <Link
-            href={href}
-            className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-            aria-label={`Link to ${title}`}
-          >
-            Ver mais &rarr;
-          </Link>
+          {imageCount > 1 && (
+            <Link
+              href={href}
+              className="text-base font-medium leading-6 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              aria-label={`Link to ${title}`}
+            >
+              Ver mais &rarr;
+            </Link>
+          )}
         </div>
       </div>
     </div>

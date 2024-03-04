@@ -26,6 +26,7 @@ export default async function Event({ params }: { params: { slug: string } }) {
             >
               <Image
                 placeholder="blur"
+                blurDataURL="/images/default.jpeg"
                 className="h-full w-full object-contain"
                 style={{ maxWidth: "100%", maxHeight: "100%" }}
                 src={`/api/imagens/${image.fileName}`}

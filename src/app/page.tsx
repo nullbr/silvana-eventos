@@ -12,6 +12,7 @@ export default async function Home() {
             <div className="animate-fade-in flex h-full flex-col justify-center gap-10 px-10 text-center text-gray-400">
               <Image
                 placeholder="blur"
+                blurDataURL="/images/hero.jpeg"
                 src="/images/hero.jpeg"
                 height={400}
                 width={400}

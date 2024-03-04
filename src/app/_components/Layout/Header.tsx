@@ -16,6 +16,7 @@ const Header = () => {
             <Image
               placeholder="blur"
               src="/images/logo.png"
+              blurDataURL="/images/logo.png"
               alt="Logo"
               width="200"
               height="40"

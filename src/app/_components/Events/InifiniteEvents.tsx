@@ -31,6 +31,7 @@ export function InfiniteEvents() {
             event={event}
             image={event.defaultImage ?? event.eventImages[0]}
             eventTags={event.eventTags}
+            imageCount={event.eventImages.length}
           />
         ))}
       </InfiniteScroll>
