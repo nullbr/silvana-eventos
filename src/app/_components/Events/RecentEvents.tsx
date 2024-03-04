@@ -36,7 +36,7 @@ export default function RecentEvents() {
         <div className="flex justify-center text-base font-medium leading-6">
           <CustomLink
             href="/eventos"
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="pt-4 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="Todos eventos"
           >
             Todos eventos &rarr;

@@ -32,6 +32,8 @@ export function ImageCard({ image }: { image: ImageType }) {
           style={{ maxWidth: "100%", maxHeight: "100%" }}
           src={`/api/imagens/${image.fileName}`}
           alt={image.fileName}
+          height={224}
+          width={224}
         />
         <div className="z-10 -mt-56 flex justify-between">
           <MdDragIndicator className="m-1 h-6 w-6 hover:text-blue-400 dark:hover:text-blue-200" />

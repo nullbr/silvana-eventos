@@ -5,6 +5,8 @@ import { Button } from "../Shared/Button";
 import { api } from "~/trpc/react";
 import { useState } from "react";
 
+const MAX_FILE_SIZE = 1;
+
 export function Form({
   eventId,
   refetchImages,
@@ -21,6 +23,8 @@ export function Form({
   });
 
   async function uploadFiles() {
+    if (!validateFiles()) return;
+
     setUploading(true);
 
     if (!files || files.length === 0) return;
@@ -30,6 +34,29 @@ export function Form({
     mutate({ images: uploadedFiles.map((file) => ({ ...file, eventId })) });
     setUploading(false);
     setFiles(null);
+  }
+
+  function validateFiles() {
+    if (!files) return false;
+
+    let isValid = true;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (!file) return (isValid = false);
+
+      const fileSize = file.size / 1024 / 1024;
+
+      if (fileSize <= MAX_FILE_SIZE) return;
+
+      alert(
+        `O arquivo ${file.name} excede o tamanho máximo permitido de ${MAX_FILE_SIZE}MB`,
+      );
+      setFiles(null);
+      return (isValid = false);
+    }
+
+    return isValid;
   }
 
   return (
@@ -59,7 +86,7 @@ export function Form({
         />
       </div>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-        PNG, JPG, JPEG.
+        PNG, JPG, JPEG. Tamanho máximo: {MAX_FILE_SIZE}MB
       </p>
     </div>
   );
