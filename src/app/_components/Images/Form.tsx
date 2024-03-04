@@ -40,13 +40,8 @@ export function Form({
     if (!files) return false;
 
     let isValid = true;
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (!file) return (isValid = false);
-
+    for (let file of files) {
       const fileSize = file.size / 1024 / 1024;
-
       if (fileSize <= MAX_FILE_SIZE) return;
 
       alert(
