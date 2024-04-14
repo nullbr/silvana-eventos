@@ -28,8 +28,6 @@ export function Buttons({
     removeEvent(event.id);
   }
 
-  if (!event) return null;
-
   return (
     <div className="flex gap-2">
       <Button
