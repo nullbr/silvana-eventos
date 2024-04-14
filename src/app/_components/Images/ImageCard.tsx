@@ -7,7 +7,7 @@ import { deleteImageFromStorage } from "~/firebase/client/firebase";
 import { ConfirmationModal } from "../Shared/ConfirmationModal";
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import Image from "next/image";
+// import Image from "next/image";
 
 export function ImageCard({ image }: { image: ImageType }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,9 +25,10 @@ export function ImageCard({ image }: { image: ImageType }) {
   return (
     <>
       <div className="h-56 w-56 overflow-hidden rounded-lg border border-gray-300 bg-gray-50 shadow-lg dark:border-gray-600 dark:bg-gray-700">
-        <Image
-          placeholder="blur"
-          blurDataURL="/images/default.jpeg"
+        {/* <Image */}
+        <img
+          // placeholder="blur"
+          // blurDataURL="/images/default.jpeg"
           className="h-full w-full object-contain"
           style={{ maxWidth: "100%", maxHeight: "100%" }}
           src={`/api/imagens/${image.fileName}`}

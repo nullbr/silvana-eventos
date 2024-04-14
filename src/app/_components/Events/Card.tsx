@@ -11,7 +11,7 @@ import Tag from "../Shared/Tag";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+// import Image from "next/image";
 
 export function Card({
   event,
@@ -59,15 +59,16 @@ export function Card({
             aria-label={`Link to ${title}`}
             disable={imageCount <= 1}
           >
-            <Image
-              placeholder="blur"
-              blurDataURL="/images/default.jpeg"
+            {/* <Image */}
+            <img
+              // placeholder="blur"
+              // blurDataURL="/images/default.jpeg"
               alt={title}
               src={imgSrc}
               className="object-cover object-center md:h-36 lg:h-48"
               width={544}
               height={306}
-              quality={80}
+              // quality={80}
             />
           </Link>
         )}
