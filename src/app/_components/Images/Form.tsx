@@ -34,21 +34,26 @@ export function Form({
     mutate({ images: uploadedFiles.map((file) => ({ ...file, eventId })) });
     setUploading(false);
     setFiles(null);
+
+    // clear files input
+    const input = document.getElementById("files") as HTMLInputElement;
+    if (input) input.value = "";
   }
 
-  function validateFiles() {
+  function validateFiles(): boolean {
     if (!files) return false;
 
     let isValid = true;
     for (const file of files) {
       const fileSize = file.size / 1024 / 1024;
-      if (fileSize <= MAX_FILE_SIZE) return;
+      if (fileSize <= MAX_FILE_SIZE || !isValid) continue;
 
       alert(
         `O arquivo ${file.name} excede o tamanho máximo permitido de ${MAX_FILE_SIZE}MB`,
       );
+
       setFiles(null);
-      return (isValid = false);
+      isValid = false;
     }
 
     return isValid;

@@ -21,7 +21,7 @@ export default function Images({ params }: { params: { id: string } }) {
 
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
-      <PageTitle title={`Adicionar imagens a ${event?.title}`} />
+      {event && <PageTitle title={`Adicionar imagens a ${event?.title}`} />}
 
       <div className="pt-4">
         <Form eventId={params.id} refetchImages={refetch} />
